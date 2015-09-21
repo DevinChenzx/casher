@@ -1,0 +1,76 @@
+/*֧������ʹ��*/
+.tradeNum{position:absolute;right:20px;top:40px;padding:10px;color:#FF7F00;font-size:14px;line-height: 200%}
+.tradeNumber{color:#FF7F00;font-family: Tahoma,Arial,"\5fae\8f6f\96c5\9ed1","����";font-size: 18px;}
+.seeMore{position:absolute;width:100px;bottom:-21px;right:10px;height:19px;background:#fff;border:1px solid #E0E0E0;border-top:1px solid #fff;}
+.seeMore a{display:block;padding:0px 10px;font-size: 12px;text-indent: 14px; background: url(../images/sprite_payFor.gif) 20px 4px no-repeat;}
+.tradeInfoList{text-align: left;height:30px;line-height: 30px;color: #666666;font-size: 14px;}
+.tradeInfoList .txtLabel{color:#000; font-weight: bold}
+.DetailInfo{text-align: left;margin:10px 0px;}
+.mt20{margin-top: 20px;}
+
+
+.PAY_contentItem{margin-bottom:30px;margin-top:20px;text-align:left;}
+.tabsArea{ position: relative;}
+.tabsLabel{position:absolute;top:0px;left:0px;}
+.tabsLabel h4{display: block;float:left;padding:5px 20px 10px 10px;color:#FF7F00;font-size: 14px; font-weight: bold;}
+.tabsLabel .tabsItem{display: block;float:left;height:34px;line-height:34px;padding:0px 20px;margin:0px 4px 0px 1px;background:#fff;border: 1px solid #555555;border-bottom: 0px solid red;font-size:14px;margin-top:-1px;cursor:pointer;}
+.tabsLabel .selected{background:url(../images/sprite_payFor.gif) -269px -248px no-repeat;border: 2px solid #2B8B05;border-bottom: none;margin:0px 3px 0px 0px;}
+.tabsTop{height:34px;}
+
+.tabsContent{border:2px solid #2B8B05;background: #fff;}
+.tabsContent .item{}
+.Pay_tipsText{margin:20px 20px 20px 40px;background: url(../images/sprite_payFor.gif) -80px 6px no-repeat;text-indent: 30px;padding:8px 0px;color: #646464;font-size: 14px;}
+.Pay_tipsText span{color:#000;}
+.selectBankArea{margin:40px 20px 20px 40px;height:260px;}
+
+.payBtnArea{padding:15px 20px 15px 40px;background: #EFFEE8;border-top:1px solid #E0E0E0;}
+
+
+/*������֤ҳ*/
+.payBankArea{margin:60px 20px 20px 70px;line-height:40px;height:40px;font-size: 14px;font-weight: bold;margin-bottom:0px;}
+.payTextTitle{margin-left:40px;font-size:14px;color:#000;}
+.payTextNum{color:#FF7F00;font-size: 14px;}
+.seePaylimit{padding:8px 0px 30px 140px; font-size: 12px; color: #3557A3}
+
+.payPhoneNum{margin:0px 20px 40px 40px;line-height:40px;height:40px;font-size: 14px;font-weight: bold;}
+.payPhoneNum input{width:150px;padding:5px;border-top:1px solid #C8C8C8; border-left:1px solid #C8C8C8; border-bottom:1px solid #EBEBEB;border-right:1px solid #EBEBEB;background:url(../images/inputBg.gif) left top no-repeat;color:#535353}
+
+.payPhoneLeft{float:left;display:block;width:300px; font-weight: normal}
+.PayPhone_tipsText{margin:0px;background: url(../images/sprite_payFor.gif) -80px 10px no-repeat;text-indent: 25px;color: #646464;font-size: 12px; color: #646464; font-family: '����'; font-weight: normal;}
+
+.loginBankBtn{height:39px;padding:0px 30px;border:1px solid #2B8B05;background: url(../images/sprite_payFor.gif) -258px -71px no-repeat;color:#fff;font-size: 14px;}
+.selectOtherPay{margin-left:20px;}
+.selectOtherPay span{background:red;padding:10px;background: url(../images/sprite_payFor.gif) -396px 8px no-repeat;}
+a.selectOtherPay:hover{color:#ff3300;}
+
+/*�ɹ�������ʾ��*/
+.dialogTipsArea{width:96%;margin:30px auto;height:110px;padding-top:30px;background:  #F7F7FD;}
+.dialogTipsArea .TipIco{display:block;float:left;width:82px;height:82px;margin-left:40px;background: url(../images/sprite_payFor.gif) 0px -181px no-repeat;}
+.dialogTipsArea .TipText{float:left;display: block;width:300px;line-height: 82px;font-size: 14px; font-weight: bold; color: #3579A3;}
+
+.helpQA{margin-top:30px;text-align: left;width:96%;margin:30px auto;}
+.helpQA div{font-size: 12px; font-family: '����';color:#868686;}
+.helpQA .help_question{margin-top:15px;text-indent: 12px; background: url(../images/sprite_payFor.gif) 0px -37px no-repeat;color: #000}
+.help_answer{padding-left:12px;height:25px;line-height: 25px}
+
+/*�쳣��ʾ*/
+.errorContent{margin-top:10px;padding:20px;border:2px solid #F19F45;background: #FFFFCC;}
+.errorContent .dialogTipsArea{background:none;}
+.errorContent .dialogTipsArea .TipIco_error{display:block;float:left;width:54px;height:54px;margin-left:40px;background: url(../images/sprite_payFor.gif) -135px -197px no-repeat;}
+.errorContent .dialogTipsArea .TipText{float:left;text-align:left;display: block;width:800px;line-height: 45px;font-size: 14px;font-weight: normal; color: #000;padding-left:20px; }
+.errorContent .dialogTipsArea .TipText span{color:#ff3300;}
+.errorContent .dialogTipsArea .TipText a{color:#007FFF;font-size: 12px; text-decoration: underline; }
+
+
+
+/*成功提示*/
+.sucessContent{margin-top:10px;padding:20px;border:2px solid #F19F45;background: #FFFFCC;}
+.sucessContent .dialogTipsArea{background:none;}
+.sucessContent .dialogTipsArea .TipIco_sucess{display:block;float:left;width:54px;height:54px;margin-left:40px;background: url(../images/sprite_payFor.gif) -4px -337px no-repeat;}
+.sucessContent .dialogTipsArea .TipText{float:left;text-align:left;display: block;width:800px;line-height: 45px;font-size: 18px;font-weight: normal; color: green;padding-left:20px; }
+.sucessContent .dialogTipsArea .TipText span{color:green;}
+.sucessContent .dialogTipsArea .TipText a{color:#007FFF;font-size: 12px; text-decoration: underline; }
+.sucessResult{margin-top:30px;text-align: left;width:75%;margin:30px auto;}
+.sucessResult div{font-size: 12px; font-family: '宋体';color:#868686;}
+.sucessResult .resultItem{margin-top:15px;text-indent: 12px;color: #000}
+

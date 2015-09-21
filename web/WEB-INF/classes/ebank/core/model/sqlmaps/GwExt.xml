@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="gw30">
+	<typeAlias alias="goods" type="ebank.core.model.domain.GwGoods" />
+	<typeAlias alias="logistic" type="ebank.core.model.domain.GwLogistic" />
+	<typeAlias alias="messages" type="ebank.core.model.domain.GwMessages" />
+	<typeAlias alias="lgoptions" type="ebank.core.model.domain.GwLgOptions" />
+	<typeAlias alias="proc" type="ebank.core.model.domain.GwProc" />
+	<typeAlias alias="accountCommand" type="ebank.core.model.domain.AccountCommand" /> 
+	<typeAlias alias="faultTrx" type="ebank.core.model.domain.GwFaultTrx" />  
+   
+	<resultMap id="goods" class="ebank.core.model.domain.GwGoods">
+		<result property="gworders_id" column="GWORDERS_ID" />
+		<result property="id" column="ID" />
+		<result property="goodid" column="GOODID" />
+		<result property="goodname" column="GOODNAME" />
+		<result property="counts" column="COUNTS" />
+		<result property="unitprice" column="UNITPRICE" />
+		<result property="amount" column="AMOUNT" />
+		<result property="createdate" column="CREATEDATE" jdbcType="date" />
+		<result property="gooddesc" column="GOODDESC" />
+	</resultMap>
+
+	<resultMap id="logistic" class="ebank.core.model.domain.GwLogistic">
+		<result property="gworders_id" column="GWORDERS_ID" />
+		<result property="recname" column="RECNAME" />
+		<result property="recpid" column="RECPID" />
+		<result property="recphone" column="RECPHONE" />
+		<result property="recaddr" column="RECADDR" />
+		<result property="recmphone" column="RECMPHONE" />
+		<result property="recpost" column="RECPOST" />
+		<result property="deliver" column="DELIVER" />
+		<result property="delivertime" column="DELIVERTIME" />
+		<result property="delivers" column="DELIVERS" />
+		<result property="createate" column="CREATEATE" jdbcType="DATE" />
+		<result property="id" column="ID" />
+	</resultMap>
+
+	<resultMap id="proc" class="ebank.core.model.domain.GwProc">
+		<result property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="gwt_id" column="GWT_ID" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="trxnum" column="TRXNUM" jdbcType="VARCHAR" />
+		<result property="trxdate" column="TRXDATE" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="procid" column="PROCID" jdbcType="VARCHAR" />
+		<result property="procname" column="PROCNAME" jdbcType="VARCHAR" />
+		<result property="createdate" column="CREATEDATE" jdbcType="DATE" />
+		<result property="prosts" column="PROSTS" jdbcType="VARCHAR" />
+		<result property="operdate" column="OPERDATE" jdbcType="DATE"
+			nullValue="" />
+		<result property="operresult" column="OPERRESULT" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="params" column="PARAMS" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="batch" column="BATCH" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="opers" column="OPERS" jdbcType="VARCHAR"
+			nullValue="" />
+	</resultMap>
+
+	<insert id="gw30.goods_insert">
+   <![CDATA[
+   	 insert into gwgoods
+       (gworders_id, id, goodid, goodname, counts, unitprice, amount, createdate, gooddesc)
+     values
+       (#gworders_id#,  '4'+TO_CHAR(sysdate,'yymm')+LPAD(SEQ_ORDEREXT.nextval,11,'0'), #goodid:VARCHAR#, #goodname:VARCHAR#, #counts#, #unitprice:NUMBERIC#, #amount:NUMBERIC#, sysdate, #gooddesc:VARCHAR#)
+ 
+    ]]>
+	</insert>
+
+	<insert id="gw30.logistic_insert">
+   <![CDATA[
+     insert into gwlogistic
+      (gworders_id, recname, recpid, recphone, recaddr, recmphone, recpost, deliver, delivertime, delivers, createate, id)
+     values
+     (#gworders_id#, #recname#, #recpid#, #recphone#, #recaddr#, #recmphone#, #recpost#, 
+     #deliver#, #delivertime#, #delivers#, sysdate, '5'++TO_CHAR(sysdate,'yymm')+LPAD(SEQ_ORDEREXT.nextval,9,'0'))
+     
+    ]]>
+	</insert>
+	<insert id="gw30.lgoptions_insert">
+   <![CDATA[
+    insert into gwlgoptions
+     (logistics_type, logistics_fee, logistics_payment, createdate, id, gworders_id)
+   values
+   (#logistics_type#, #logistics_fee#, #logistics_payment#, SYSDATE,'6'+TO_CHAR(sysdate,'yymm')+LPAD(SEQ_ORDEREXT.nextval,11,'0') , #gworders_id#)
+    ]]>
+	</insert>
+
+	<insert id="gw30.proc_insert" parameterClass="proc">
+		insert into gwproc
+		(id, gwt_id, trxnum, trxdate, procid, procname, createdate, prosts,
+		operdate, operresult, params, batch, opers)
+		values
+		('8'||TO_CHAR(sysdate,'yymm')||LPAD(SEQ_ORDEREXT.nextval,9,'0'),
+		#gwt_id#, #trxnum#, #trxdate#, #procid#, #procname#, sysdate,
+		#prosts#, sysdate, #operresult#, #params#, #batch#, #opers#)
+ </insert>
+	<insert id="gw30.proc_insertWithTrxFk" parameterClass="proc">
+		insert
+		into gwproc
+		(id, gwt_id, trxnum, trxdate, procid, procname, createdate,
+		prosts,
+		operdate, operresult, params, batch, opers)
+		select
+		'8'||TO_CHAR(sysdate,'yymm')||LPAD(SEQ_ORDEREXT.nextval,9,'0'),#gwt_id#,trxnum,to_char(closedate,'yyyyMMdd'),#procid#,#procname#,sysdate,#prosts#,
+		sysdate,#operresult#,#params#,#batch#,#opers#
+		from GWTRXS where
+		id=#gwt_id#
+ </insert>
+	<select id="gw30.proc_getProc" parameterClass="map" resultClass="proc">
+		select * from gwproc where procname=#procname# and gwt_id=#gwt_id#
+ </select>
+	<update id="gw30.proc_updatests" parameterClass="proc">
+		update gwproc
+		set prosts=#prosts#,operresult=#operresult#,operdate=sysdate
+		where
+		gwt_id=#gwt_id# and procname=#procname#
+ </update>
+	<select id="gw30.goods_getByFk" parameterClass="java.lang.String"
+		resultMap="goods">
+		select
+		*
+		from GWGOODS
+		where gworders_id=#value# 
+ </select>
+
+	<select id="gw30.logistic_getByFk" parameterClass="java.lang.String"
+		resultMap="logistic">
+		select
+		*
+		from GWLOGISTIC
+		where gworders_id=#value# 
+ </select>
+	<select id="gw30.lgoptions_getByFk" parameterClass="java.lang.String"
+		resultClass="lgoptions">
+		select
+		*
+		from GWLGOPTIONS
+		where gworders_id=#value# 
+ </select>
+
+	<select id="gw30.lgoptions_getByPk" parameterClass="String"
+		resultClass="lgoptions">
+		select * from GWLGOPTIONS where id=#value#
+    </select>
+
+	<parameterMap id="postresult" class="java.util.Map">
+		<parameter property="v_paymentid" javaType="java.lang.String" mode="IN" />
+		<parameter property="v_step" javaType="java.lang.String" jdbcType="VARCHAR" mode="OUT" />
+		<parameter property="v_result" javaType="java.lang.String" jdbcType="VARCHAR" mode="OUT" />
+	</parameterMap>
+	<procedure id="gw30.postpayment" parameterMap="postresult">
+		 <![CDATA[
+		   {call proc_postpayment(?,?,?)}
+		  ]]>
+	</procedure>
+	<select id="gw30.getComandsByNo" parameterClass="String"
+		resultClass="accountCommand">
+		select * from TRADE_ACCOUNT_COMMAND_SAF where
+		command_no=#value# order
+		by sub_seqno asc 
+    </select>
+    <update id="gw30.updateCmd" parameterClass="map">
+		update
+		TRADE_ACCOUNT_COMMAND_SAF
+		SET
+		RESP_CODE=#accRespCode#,SYNC_FLAG=#accSyncFlag#,LAST_UPDATED=sysdate,TRANS_CODE=#accTransCode#,TRANS_ID=#accTransId#,REDO_flag=#redo_flag#		
+		where COMMAND_NO=#accCommandNo#
+    </update>
+    <select id="gw30.getFaultTrxs" resultClass="faultTrx">
+       <![CDATA[
+        select f.* from acquire_fault_trx f inner join gwtrxs g on f.trxid=g.id and f.change_sts<>g.trxsts
+        where auth_sts in ('Y','U') AND final_sts='WAIT' AND trunc(update_date)>trunc(sysdate-3)
+       ]]>        
+    </select>    
+    <update id="gw30.updateFaultTrxs" parameterClass="faultTrx">
+        update acquire_fault_trx set final_sts=#final_sts#,update_date=sysdate,final_result=#final_result#,
+        version=version+1
+        where id=#id# and version=#version#
+    </update>
+    <select id="gw30.getFaultTrxsById" resultClass="faultTrx">
+        <![CDATA[
+         select f.* from acquire_fault_trx f inner join gwtrxs g on f.trxid=g.id and f.change_sts<>g.trxsts
+         where  f.id=#value# and auth_sts in ('Y','U')
+         ]]>   
+    </select>
+    <select id="getFaultTrxsByBatchnum" resultClass="faultTrx" parameterClass="string">
+        <![CDATA[
+         select f.* from acquire_fault_trx f inner join gwtrxs g on f.trxid=g.id and f.change_sts<>g.trxsts
+         where  f.batchnum=#value# and auth_sts in ('Y','U')
+         ]]>
+    </select>
+
+</sqlMap>
+ 

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="gb2312"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:tx="http://www.springframework.org/schema/tx"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd   
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd   
+                        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+    
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+			    <value>classpath:params/application.properties</value>			
+				<value>classpath:params/service.properties</value>
+			</list>
+		</property>
+	</bean>	
+	<!--  bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+-->
+	<bean id="dataSource" class="ebank.core.SecurityDs" init-method="init">
+		<property name="driverClassName" value="${jdbc.driver}"/>			
+		<property name="url" value="${jdbc.url}"/>			
+		<property name="username" value="${jdbc.username}"/>			
+		<property name="password" value="${jdbc.password}"/>
+		<property name="dskey" value="1a8d9d6a45713f79"/>	<!-- ys2011 kitian -->		
+		<property name="validationQuery" value="select 1 from dual"/>				  
+        <property name="maxActive" value="300"/>
+        <property name="maxIdle" value="5" />
+        <property name="maxWait" value="10" />     
+        <property name="testOnBorrow" value="true" />
+        <property name="testWhileIdle" value="true" />
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+        <property name="minEvictableIdleTimeMillis" value="60000" />
+        <property name="removeAbandoned" value="true" />		
+   </bean>  
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource"><ref bean="dataSource"/></property>
+	</bean>	
+	<!-- SqlMap setup for iBATIS Database Layer -->
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation">
+		 <value>classpath:sql-map-config.xml</value>
+	     </property>
+	</bean>
+    <bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+    	<property name="sqlMapClient"><ref bean="sqlMapClient"/></property>
+    	<property name="dataSource">
+    	<ref bean="dataSource" /> 
+    	</property>    	    	
+    </bean>    
+	<!-- Choose the dialect that matches your "dataSource" definition -->	
+	<bean id="jdbcExceptionTranslator" 
+		class="org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator"> 
+		<property name="dataSource"> 
+		<ref bean="dataSource" /> 
+		</property> 
+	</bean>	  		
+	<!--baseTransactionProxy --> 
+	<bean abstract="true" 	
+		  class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" 
+		  id="baseTransactionProxy"> 
+		<property name="transactionManager"> 
+			<ref bean="transactionManager" /> 
+		</property> 
+		<property name="transactionAttributes"> 
+			<props> 
+			<prop key="tx_*">PROPAGATION_REQUIRED,-ServiceException,-Exception</prop> 	
+			<prop key="*">PROPAGATION_REQUIRED,readOnly</prop> 
+			</props> 
+		</property> 
+	</bean>	
+	<!--DAO inject -->
+	<bean id="baseDAO" class="ebank.core.model.dao.BaseDAO">
+		<property name="sqlMapClientTemplate">
+		   <ref bean="sqlMapClientTemplate" />
+		</property>
+	</bean>
+	<bean id="sequenceDao" class="ebank.core.model.dao.SqlMapSequenceDao" parent="baseDAO">		
+	</bean>		
+	<bean id="gw01DAO" class="ebank.core.model.dao.GwServiceDAO" parent="baseDAO"></bean>		
+	<bean id="orderDAO" class="ebank.core.model.dao.GwOrdersDAO" parent="baseDAO">		
+	</bean>
+	<bean id="tradePrecardDAO" class="ebank.core.model.dao.TradePrecardDAO" parent="baseDAO">		
+	</bean>
+	<bean id="trxDAO" class="ebank.core.model.dao.GwTrxsDAO" parent="baseDAO">		
+	</bean>	
+	<bean id="extDAO" class="ebank.core.model.dao.GW30ExtDAO" parent="baseDAO">		
+	</bean>
+	<bean id="procDAO" class="ebank.core.model.dao.GwProcDAO" parent="baseDAO">		
+	</bean>
+	<bean id="nfDAO" class="ebank.core.model.dao.GwNotifyDAO" parent="baseDAO"/>		
+	<bean id="gwsynlogDAO" class="ebank.core.model.dao.GWSynLogDAO" parent="baseDAO"/>	
+	<bean id="viewsDAO" class="ebank.core.model.dao.GwViewsDAO" parent="baseDAO"></bean>
+	
+	<bean id="faqDAO" class="ebank.core.model.dao.GwFaqDAO" parent="baseDAO"/>
+	
+	<bean id="certDAO" class="ebank.core.model.dao.MerchantCertsDAO" parent="baseDAO"/>	
+	
+	<bean id="rSAUtil" class="beartool.RSAUtil">
+		<property name="certDAO" ref="certDAO"></property>
+	</bean>
+	
+	<!-- SEQ -->
+	<bean id="sequenceService" parent="baseTransactionProxy">
+        <property name="target">
+            <bean class="ebank.core.logic.SequenceService_Impl">     
+                <property name="sqldao"><ref local="sequenceDao"/></property>  
+            </bean>         
+        </property>
+    </bean>
+    
+    <!-- ST -->
+    <bean id="engineService" class="ebank.core.STEngineService">   	  
+   	<property name="publishService"><ref bean="publishService"/></property>   	
+   	<property name="orderService"><ref bean="orderService"/></property>   	   	
+   </bean>
+   <!-- faq -->
+   <bean id="faqService" parent="baseTransactionProxy">
+        <property name="target">
+            <bean class="ebank.core.logic.FaqService_Impl">     
+                <property name="faqDAO"><ref local="faqDAO"/></property>                                    
+            </bean>         
+        </property>
+    </bean> 
+    
+    <!-- ORDER -->
+    <bean id="orderService" parent="baseTransactionProxy">
+        <property name="target">
+            <bean class="ebank.core.logic.OrderService_Impl">     
+                <property name="orderDAO"><ref local="orderDAO"/></property> 
+                <property name="trxDAO"><ref local="trxDAO"/></property> 
+                <property name="extDAO"><ref local="extDAO"/></property>                                       
+                <property name="viewsDAO"><ref local="viewsDAO"/></property>                                     
+            </bean>         
+        </property>
+    </bean> 
+    <!-- PRECARD -->
+    <bean id="tradePrecardService" parent="baseTransactionProxy">  
+		<property name="target">
+			<bean class="ebank.core.logic.TradePrecard_Impl">
+			     <property name="tradePrecardDAO"><ref local="tradePrecardDAO"/></property>
+			</bean>
+		</property>
+	</bean>
+    <!-- USER -->
+    <bean id="userService" parent="baseTransactionProxy">
+    
+        <property name="target">
+            <bean class="ebank.core.logic.UserService_Impl">     
+                <property name="viewsDAO" ref="viewsDAO"/>                          
+            </bean>         
+        </property>
+    </bean>
+   <!-- SLA -->
+    <bean id="slaService" parent="baseTransactionProxy">
+       <property name="target">
+          <bean class="ebank.core.logic.SLAService_Impl"> 
+            <property name="gw01DAO" ref="gw01DAO"/>       
+          </bean>
+        </property>
+    </bean>   
+    
+    <!-- payresult -->
+    <bean id="payResultService" class="ebank.core.logic.PayResultService_Impl">      
+      <property name="orderService" ref="orderService"/>
+      <property name="userService" ref="userService"/>
+      <property name="noticeService" ref="noticeService"/>
+                  <property name="rsaUtil" ref="rSAUtil"/>
+    </bean>    
+   
+    <bean id="publishService" 
+	     class="ebank.core.logic.PublishService_Impl">	    
+	     <property name="subs">
+	     	<list>
+	     	    <ref bean="trxPost_Observer"/>
+	     		<ref bean="orderNotifyService_observer"/>	     		
+	     	</list>     	
+	     </property>
+	     <property name="directPayService" ref="directPayService"/>
+         <property name="orderService" ref="orderService"/>
+	</bean>	
+	<bean id="noticeService" parent="baseTransactionProxy">
+	  <property name="target">
+         <bean class="ebank.core.logic.NotifyService_Impl">  
+	       <property name="nfDAO" ref="nfDAO"/>
+	       <property name="httpClientService" ref="httpClientService"/>
+	     </bean>
+	   </property>	   
+	</bean>
+	<bean id="procService" parent="baseTransactionProxy">
+	  <property name="target">
+         <bean class="ebank.core.logic.ProcService_Impl">  
+	       <property name="procDAO" ref="procDAO"/>
+	     </bean>
+	   </property> 
+	</bean>	
+	
+	 <bean id="httpClientInvoker" class="ebank.core.logic.NotifyService_Impl">  
+	       <property name="nfDAO" ref="nfDAO"/>
+	       <property name="httpClientService" ref="httpClientService"/>
+	     </bean>
+	     
+    <bean id="threadPool" class="EDU.oswego.cs.dl.util.concurrent.PooledExecutor">
+		<constructor-arg type="EDU.oswego.cs.dl.util.concurrent.Channel">
+			<bean class="EDU.oswego.cs.dl.util.concurrent.BoundedBuffer">
+				<constructor-arg type="int" value="10" /><!--10 buddle-->
+			</bean>			
+		</constructor-arg>
+		<constructor-arg type="int" value="30" /><!--max30 thread-->
+		<property name="minimumPoolSize" value="10" />
+		<property name="keepAliveTime" value="-1" /><!--keep alive-->
+	</bean>	
+    
+    <!-- Velocity -->
+    <bean id="velocityTemplateService" class="ebank.core.logic.VelocityTemplateService_Impl">
+      <property name="velocityEngine">
+         <bean class="org.apache.velocity.app.VelocityEngine"></bean>
+      </property>
+      <property name="path" value="template"/>
+    </bean> 
+    <bean id="httpClientService" class="ebank.core.remote.HttpClientService"/>
+    
+    <bean id="orderNotifyService_observer" class="ebank.core.logic.OrderNotifyObserver_Impl">   
+      <property name="payResultService" ref="payResultService"/>
+       <property name="userService" ref="userService"/>
+      <property name="noticeService"   ref="noticeService"/>
+    </bean>  
+    
+    <bean id="trxPost_Observer" class="ebank.core.logic.TrxPostObserver_Impl">
+      <property name="procService" ref="procService"/>
+      <property name="accountService" ref="accountService"/>
+      <property name="orderService" ref="orderService"/> 
+      <property name="esbService" ref="esbService"/>     
+    </bean>
+    
+    <bean id="accountService" parent="baseTransactionProxy">
+	  <property name="target">
+         <bean class="ebank.core.logic.AccountService_Impl" parent="baseDAO">  
+	       <property name="httpUrl" value="${isms.posttrx_url}"/>
+	       <property name="httpClientService" ref="httpClientService"/>
+	     </bean>
+	  </property> 
+	</bean>
+	<bean id="directPayService" class="ebank.core.logic.DirectPay_Impl">
+	   <property name="accountService" ref="accountService"/>
+	   <property name="orderService" ref="orderService"/>
+	   <property name="payResultService" ref="payResultService"/>
+	   <property name="userService" ref="userService"/>
+	   <property name="esbService" ref="esbService" />
+	   <property name="noticeService" ref="noticeService"/>
+	</bean>	
+	 <bean id="serviceFactory" class="ebank.core.bank.BankServiceFactory">       
+     </bean> 
+     <!-- jni proxy -->
+     <bean id="jniProxyservice" class="ebank.core.remote.JniProxyService_Impl">
+        <property name="proxyhost" value="${jniproxy.url}"/>
+        <property name="proxyhost2" value="${jniproxy.url2}"/>
+     </bean>
+     
+     <bean id="jniHttpProxyService" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+	   <property name="serviceUrl" value="${jniproxy.url}"/>
+	   <property name="serviceInterface" value="ebank.core.remote.JniProxyService"/>    
+ 	 </bean>
+     
+     <bean id="agent" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+      <property name="serviceUrl" value="${agent.url}/remote/agent.do"/>
+      <property name="serviceInterface" value="ebank.core.remote.agent.AgentFacadeService"/>      
+    </bean>	
+    <bean id="agent2" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+      <property name="serviceUrl" value="${agent.url}/remote/agent.do"/>
+      <property name="serviceInterface" value="ebank.core.remote.agent.AgentFacadeService"/> 
+    </bean>   
+    <!-- sms -->
+    <bean id="smsClientService" class="ebank.core.remote.SmsClientService">
+	   <property name="smsServiceUrl" value="${sms.url}"/>
+	   <property name="smsUserid" value="${sms.userid}"/>
+	   <property name="smsUserpwd" value="${sms.userpwd}"/>
+	</bean>	
+	<!-- queryResult -->	
+	 <bean id="queryResultService" class="ebank.core.remote.QueryResultService">
+	   <property name="queryResultUrl" value="${queryResult.url}"/>
+	</bean>	
+    <!-- jms -->
+    
+    <bean id="txTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+       <property name="transactionManager" ref="transactionManager"/>       
+	</bean>
+    <bean id="esbService" class="ebank.core.logic.JMSBill_Impl">
+       <property name="jmsTemplate" ref="jmsTemplate"/>
+       <property name="txTemplate" ref="txTemplate"/>
+       <property name="orderService" ref="orderService"/>
+       <property name="enable" value="true"/>
+       <property name="threadPool" ref="threadPool"/>
+	</bean>
+	<bean id="jmsFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
+	    <property name="connectionFactory">
+	      <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+	        <property name="brokerURL" value="${jms.brokerurl}"/>
+	      </bean>
+	    </property>
+    </bean>	
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+	    <property name="connectionFactory" ref="jmsFactory"/>    
+	    <property name="pubSubDomain" value="true"/>
+	</bean>    
+    
+</beans>

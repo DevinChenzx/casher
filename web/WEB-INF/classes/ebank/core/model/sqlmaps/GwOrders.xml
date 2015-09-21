@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="gw10">
+	<typeAlias alias="order" type="ebank.core.model.domain.GwOrders" />
+	<typeAlias alias="suborder" type="ebank.core.model.domain.GwSuborders" />	
+	<typeAlias alias="trade" type="ebank.core.model.domain.TradeBase"/>
+	<typeAlias alias="trxsNum" type="ebank.core.model.domain.TrxsNum"/>
+	
+	<resultMap class="trxsNum" id="trxsNum_map">
+		<result property="trxnum" column="TRXNUM" jdbcType="VARCHAR" />
+	  	<result property="acquirer_code" column="ACQUIRER_CODE" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="trade_map" class="trade">
+	  <result property="id" column="ID" jdbcType="VARCHAR" />
+	  <result property="dateCreated" column="DATE_CREATED" jdbcType="DATETIME" />
+	  <result property="lastUpdated" column="LAST_UPDATED" jdbcType="DATETIME" />
+	  <result property="tradeNo" column="TRADE_NO" jdbcType="VARCHAR" />
+	  <result property="tradeType" column="TRADE_TYPE" jdbcType="VARCHAR" />
+	  <result property="payeeCustNo" column="PAYEE_CUSTNO" jdbcType="VARCHAR" />
+	  <result property="payerAccountNo" column="PAYER_ACCOUNT_NO" jdbcType="VARCHAR" />
+	  <result property="payeeAccountNo" column="PAYEE_ACCOUNT_NO" jdbcType="VARCHAR" /> 
+	  <result property="outTradeNo" column="OUT_TRADE_NO" jdbcType="VARCHAR" /> 
+	  <result property="amount" column="AMOUNT" jdbcType="LONG" />
+	  <result property="currency" column="CURRENCY" jdbcType="VARCHAR" />
+	  <result property="subject" column="SUBJECT" jdbcType="VARCHAR" />   
+	  <result property="status" column="STATUS" jdbcType="VARCHAR" />
+	  <result property="note" column="NOTE" jdbcType="VARCHAR" />   
+	</resultMap>
+	
+	<resultMap id="orders_map" class="order">
+		<result property="version" column="VERSION" jdbcType="NUMBER"
+			nullValue="0" />
+		<result property="refund_amount" column="REFUND_AMOUNT"
+			jdbcType="NUMBER" nullValue="0" />
+		<result property="refund_sts" column="REFUND_STS" jdbcType="VARCHAR"
+			nullValue="0" />
+		<result property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="service" column="SERVICE" jdbcType="VARCHAR" />
+		<result property="ordernum" column="ORDERNUM" jdbcType="VARCHAR" />
+		<result property="partnerid" column="PARTNERID" jdbcType="VARCHAR" />
+		<result property="partner_id" column="PARTNER_ID" jdbcType="NUMBER"
+			nullValue="0" />
+		<result property="seller_name" column="SELLER_NAME" jdbcType="VARCHAR" />
+		<result property="seller_id" column="SELLER_ID" jdbcType="VARCHAR" />
+		<result property="buyer_name" column="BUYER_NAME" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="buyer_id" column="BUYER_ID" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="price" column="PRICE" jdbcType="NUMBER" />
+		<result property="quantity" column="QUANTITY" jdbcType="NUMBER" />
+		<result property="sign_type" column="SIGN_TYPE" jdbcType="VARCHAR" />
+		<result property="discount" column="DISCOUNT" jdbcType="NUMBER" />
+		<result property="discountdesc" column="DISCOUNTDESC" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="discount_mode" column="discount_mode"
+			jdbcType="VARCHAR" nullValue="" />
+		<result property="currency" column="CURRENCY" jdbcType="VARCHAR" />
+		<result property="orderdate" column="ORDERDATE" jdbcType="VARCHAR" />
+		<result property="createdate" column="CREATEDATE" jdbcType="DATETIME" />
+		<result property="query_key" column="QUERY_KEY" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="exp_dates" column="EXP_DATES" jdbcType="VARCHAR" />
+		<result property="closedate" column="CLOSEDATE"/>
+		<result property="ips" column="IPS" jdbcType="VARCHAR" />
+		<result property="ordersts" column="ORDERSTS" jdbcType="VARCHAR" />
+		<result property="seller_remarks" column="SELLER_REMARKS"
+			jdbcType="VARCHAR" nullValue="" />
+		<result property="buyer_remarks" column="BUYER_REMARKS"
+			jdbcType="VARCHAR" nullValue="" />
+		<result property="return_url" column="RETURN_URL" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="notify_url" column="NOTIFY_URL" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="show_url" column="SHOW_URL" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="subject" column="SUBJECT" jdbcType="VARCHAR" />
+		<result property="bodys" column="BODYS" jdbcType="VARCHAR" />
+		<result property="royalty_type" column="ROYALTY_TYPE" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="royalty_parameters" column="ROYALTY_PARAMETERS"
+			jdbcType="VARCHAR" nullValue="" />
+		<result property="amount" column="AMOUNT" jdbcType="NUMBER" />
+		<result property="gwlgoptions_id" column="GWLGOPTIONS_ID"
+			jdbcType="VARCHAR" nullValue="" />
+		<result property="pricechanged" column="PRICECHANGED" jdbcType="NUMBER"
+			nullValue="0" />
+		<result property="apiversion" column="APIVERSION" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="locale" column="LOCALE" jdbcType="VARCHAR" />
+		<result property="preference" column="PREFERENCE" jdbcType="VARCHAR"
+			nullValue="" />
+		<result property="charsets" column="CHARSETS" jdbcType="VARCHAR"
+			nullValue="GBK" />
+		<result property="order_type" column="ORDER_TYPE" jdbcType="VARCHAR" />
+		<result property="paymethod" column="PAYMETHOD" jdbcType="VARCHAR"
+			nullValue="bankPay" />
+		<result property="agentid" column="AGENTID" jdbcType="VARCHAR"
+			nullValue="0" />
+		<result property="service_fee" column="SERVICE_FEE" jdbcType="NUMBER"
+			nullValue="0" />
+		<result property="directpayamt" column="DIRECTPAYAMT" jdbcType="NUMBER"
+			nullValue="0" />
+	    <result property="buyer_realname" column="BUYER_REALNAME" jdbcType="VARCHAR"
+			nullValue="" />
+	    <result property="buyer_contact" column="BUYER_CONTACT" jdbcType="VARCHAR"
+			nullValue="" />
+		 <result property="ext_param1" column="EXT_PARAM1" jdbcType="VARCHAR"
+			nullValue="" />
+		  <result property="ext_param2" column="EXT_PARAM2" jdbcType="VARCHAR"
+			nullValue="" />
+	</resultMap>
+	
+	<resultMap id="suborder_map" class="suborder">
+	    <result property="id" column="ID" />
+		<result property="gwordersid" column="GWORDERSID" />
+		<result property="outtradeno" column="OUTTRADENO" />
+		<result property="seller_name" column="SELLER_NAME"  />
+		<result property="seller_custno" column="SELLER_CUSTNO"/>
+		<result property="seller_code" column="SELLER_CODE" />
+		<result property="seller_ext" column="SELLER_EXT" />
+		<result property="amount" column="AMOUNT" />
+		<result property="createdate" column="CREATEDATE" />
+	 </resultMap>
+	 
+	<resultMap id="suborder_map" class="suborder">
+	    <result property="id" column="ID" />
+		<result property="gwordersid" column="GWORDERSID" />
+		<result property="outtradeno" column="OUTTRADENO" />
+		<result property="seller_name" column="SELLER_NAME"  />
+		<result property="seller_custno" column="SELLER_CUSTNO"/>
+		<result property="seller_code" column="SELLER_CODE" />
+		<result property="seller_ext" column="SELLER_EXT" />
+		<result property="amount" column="AMOUNT" />
+		<result property="createdate" column="CREATEDATE" />
+	 </resultMap>
+	
+	<insert id="gw10.orders_insert" parameterClass="order">
+		<selectKey resultClass="String" keyProperty="id">
+			SELECT
+			'10'||TO_CHAR(sysdate,'yymmdd')||LPAD(SEQ_ORDER.nextval,7,'0')
+			AS ID
+			FROM DUAL  
+        </selectKey>        
+         <![CDATA[         
+    insert into gworders
+   (order_type,id, service, ordernum, 
+    partnerid, seller_name,seller_id,buyer_name,buyer_id,quantity,price, sign_type, discount, currency, orderdate, createdate, query_key, exp_dates, ips, ordersts, seller_remarks, buyer_remarks, 
+    return_url, notify_url,subject, bodys, royalty_type, royalty_parameters, amount, gwlgoptions_id, pricechanged, apiversion, locale, preference,version,charsets,discountdesc,gwl_update,
+    discount_mode,paymethod,agentid,service_fee,closedate,partner_id,show_url,buyer_realname,buyer_contact,ext_param1,ext_param2)
+    values (
+  #order_type#,#id#,#service#,#ordernum#, 
+  #partnerid#, #seller_name#,#seller_id#,#buyer_name#,#buyer_id#,#quantity#,#price#, #sign_type#, #discount#, #currency#, #orderdate#, sysdate, #query_key#, #exp_dates#, #ips#, '0', #seller_remarks#,
+  #buyer_remarks#, #return_url#, #notify_url#,#subject#, #bodys#, #royalty_type#, #royalty_parameters#, #amount#, #gwlgoptions_id#, #pricechanged#, #apiversion#, #locale#, #preference#,0,#charsets#,#discountdesc#,sysdate,
+  #discount_mode#,#paymethod#,#agentid#,#service_fee#,sysdate,#partner_id#,#show_url#,#buyer_realname#,#buyer_contact#,#ext_param1#,#ext_param2#)
+          
+         ]]>
+	</insert>
+	
+   <insert id="gw10.subOrders_insert" parameterClass="suborder">
+		<selectKey resultClass="String" keyProperty="id">
+			SELECT
+			'10'||TO_CHAR(sysdate,'yymmdd')||LPAD(SEQ_ORDER.nextval,7,'0')
+			AS ID
+			FROM DUAL  
+        </selectKey>        
+         <![CDATA[         
+    insert into  gwsuborders
+   (id,gwordersid,outtradeno,seller_name,seller_custno,seller_code,seller_ext,amount,createdate)
+    values (
+    #id#,#gwordersid#,#outtradeno#,#seller_name#,#seller_custno#,#seller_code#,#seller_ext#,#amount#,#createdate#)
+         ]]>
+	</insert>
+	
+	<select id="gw10.order_selectByPk" resultMap="orders_map"
+		parameterClass="String">
+		select * from gworders where id=#value#
+	</select>
+	<select id="gw10.subOrder_selectByOrderId" resultMap="suborder_map"
+		parameterClass="String">
+		select * from gwsuborders where gwordersid=#value#
+	</select>    
+	<select id="gw10.order_selectwithTrxAndBk" parameterClass="map"
+		resultMap="orders_map">
+		select t.* from gworders t inner join gwtrxs w on
+		t.id=w.gworders_id where
+		w.trxnum=#trxnum# and
+		w.acquirer_code=#bankcode#
+    </select>
+    
+    <select id="gw10.order_findTrxnum" parameterClass="map"
+		resultMap="trxsNum_map">
+		select w.acquirer_code,w.trxnum from gworders t inner join gwtrxs w on
+		t.id=w.gworders_id where
+		t.id=#id# and
+		w.acquirer_code=#bankcode#
+    </select>
+    
+    
+    
+    <select id="gw10.order_selectOrdersByCodeAndNo"  parameterClass="map"  resultMap="orders_map">
+		select t.* from gworders t inner join gwsuborders s on
+		t.id=s.gwordersid where
+		s.outtradeno=#outtradeno# and
+		s.seller_code=#seller_code# and 
+		t.ORDERSTS = 3
+    </select>
+    
+	<select id="gw10.findPartnerOrder" parameterClass="map"
+		resultMap="orders_map">
+		select * from gworders where partnerid=#partnerid# and
+		ordernum=#ordernum# and rownum=1
+    </select>
+    <select id="gw10.countPartnerOrder" parameterClass="map" resultClass="int">
+        select count(*) from gworders where partnerid=#partnerid# and
+		ordernum=#ordernum# and amount=#amount# and ordersts in('1','3') and trunc(createdate)>trunc(sysdate-7)
+    </select>
+	<select id="gw10.findOrderByNotifyInfo" parameterClass="map"
+		resultMap="orders_map">
+  	<![CDATA[
+   select * from gworders where partnerid=#partnerid# and notifyid=#notifyid# and notifydate>=(sysdate-3/(24*60))
+   ]]>
+	</select>
+	<update id="gw10.updateOrderPayResult" parameterClass="order">
+		update gworders set
+		ordersts=#ordersts#,version=version+1,closedate=sysdate
+		where id=#id#
+		and version=#version#
+    </update>
+	<update id="gw10.updateBuyerInfo" parameterClass="map">
+		update gworders set
+		buyer_id=#buyer_id#,buyer_name=#buyer_name# where
+		id=#id#
+    </update>
+    <update id="gw10.updateBuyerInfos" parameterClass="order">
+		update gworders set
+		buyer_id=#buyer_id#,buyer_name=#buyer_name#,paymethod=#paymethod#,directpayamt=#directpayamt# where
+		id=#id#
+    </update>
+    <update id="gw10.updateBuyerContact" parameterClass="map">
+       update gworders set buyer_contact=#buyer_contact# where id=#id#
+    </update>
+    <update id="gw10.updateBuyerQueryKey" parameterClass="map">
+       update gworders set query_key=#query_key# where id=#id#
+    </update>
+    <update id="gw10.updateOrderStatus" parameterClass="order">
+		update gworders set ordersts=#ordersts#,subject=#subject# where id=#id#
+    </update>
+	<parameterMap id="procresult" class="java.util.Map">
+		<parameter property="id" javaType="java.lang.String" mode="IN" />
+		<parameter property="acquirecode" javaType="java.lang.String" jdbcType="VARCHAR"
+			mode="IN" />
+		<parameter property="acquiremerchant" javaType="java.lang.String" jdbcType="VARCHAR"
+			mode="IN" />
+		<parameter property="result" javaType="java.lang.String"
+			jdbcType="VARCHAR" mode="OUT" />
+	</parameterMap>
+	<procedure id="gw10.getOrderDecision" parameterMap="procresult">
+		 <![CDATA[
+		   {call proc_decision(?,?,?,?)}
+		  ]]>
+	</procedure>
+	<select id="gw10.withoutNotify" resultMap="orders_map">
+	     <![CDATA[
+	    select g.* from gworders g left join mapi_async_notify m on g.id=to_char(m.record_id) 
+		where m.record_id is null 
+		and (g.ordersts='1' or g.ordersts='3') 
+		and notify_url is not null
+		and g.closedate<sysdate-3/(24*60)
+		and trunc(closedate)>trunc(sysdate-1)
+		]]>
+	</select>
+	<select id="gw10.findOrderByPaymentID" resultMap="orders_map">
+	  select g.* from gworders g inner join gwpayments p on g.id=p.paynum where p.id=#value# and p.paytype=0
+	</select>
+	<select id="gw10.findTradeBaseByOrderId" resultMap="trade_map">
+	  select 
+	    b.id,b.date_created as DATE_CREATED,b.last_updated as LAST_UPDATED,b.trade_no as TRADE_NO,
+		b.trade_type as trade_type,nvl(s.seller_custno,g.seller_id) as PAYEE_CUSTNO,
+		b.payee_account_no as PAYEE_ACCOUNT_NO,b.payer_account_no as PAYER_ACCOUNT_NO,b.out_trade_no as OUT_TRADE_NO,
+		b.amount,b.currency,b.subject,b.status,b.note
+	  from gworders g 
+	  left join gwsuborders s on g.id=s.gwordersid
+	  left join trade_base b on g.id=b.trade_no or s.id=b.trade_no
+      where g.id=#value#
+	</select>
+	
+		
+	<!-- 交易限额设置 -->
+	<typeAlias alias="corporationInfo" type="ebank.core.model.domain.CmCorporationInfo"/>
+	
+	<resultMap id="corporationInfo_map" class="corporationInfo">
+	  <result property="customerNo" column="CUSTOMER_NO" jdbcType="VARCHAR" />
+	  <result property="dayQutor" column="DAY_QUTOR" jdbcType="FLOAT" />
+	  <result property="dayQutorCount" column="DAY_QUTOR_COUNT" jdbcType="FLOAT" />
+	  <result property="qutor" column="QUTOR" jdbcType="FLOAT" />
+	</resultMap>
+	
+	<select id="gw10.findCorporationInfoByCustomerNo" resultMap="corporationInfo_map">
+          select cu.customer_no,co.day_qutor,co.day_qutor_count,co.qutor from 
+          cm_customer cu,cm_corporation_info co where cu.id=co.id and cu.customer_no=#value# 
+	</select>
+    
+    <!-- 商户当日交易金额累计 -->
+    <update id="gw10.updateDayQutorCount" parameterClass="map">
+		update cm_corporation_info info set info.day_qutor_count=day_qutor_count+#dayQutorCount# where info.id =(select cm.id from cm_customer cm where cm.customer_no=#customerNo#)
+    </update>
+</sqlMap>

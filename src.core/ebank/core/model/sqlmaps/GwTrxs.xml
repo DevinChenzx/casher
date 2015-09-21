@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="gw20">
+ <typeAlias alias="trx" type="ebank.core.model.domain.GwTrxs"/>  
+ <resultMap id="trx_map" class="trx">
+    <result property="submitdates" column="SUBMITDATES" jdbcType="VARCHAR" nullValue="" />
+    <result property="fromacctid" column="FROMACCTID" jdbcType="NUMBER"  />
+	<result property="fromacctnum" column="FROMACCTNUM" jdbcType="VARCHAR"  />
+	<result property="buyer_id" column="buyer_id" jdbcType="VARCHAR" />
+	<result property="buyer_name" column="buyer_name" jdbcType="VARCHAR"  />	
+	<result property="gworders_id" column="GWORDERS_ID" jdbcType="VARCHAR"  />
+	<result property="trxnum" column="TRXNUM" jdbcType="VARCHAR"  />
+	<result property="trxtype" column="TRXTYPE" jdbcType="VARCHAR" />
+	<result property="paymode" column="PAYMODE" jdbcType="VARCHAR"  />
+	<result property="amount" column="AMOUNT" jdbcType="NUMBER"  />
+	<result property="currency" column="CURRENCY" jdbcType="VARCHAR" />
+	<result property="servicecode" column="SERVICECODE" jdbcType="VARCHAR" nullValue=""   />
+	<result property="acquirer_id" column="ACQUIRER_ID" jdbcType="VARCHAR" nullValue=""/>
+	<result property="acquirer_code" column="ACQUIRER_CODE" jdbcType="VARCHAR" />
+	<result property="acquirer_name" column="ACQUIRER_NAME" jdbcType="VARCHAR"  />
+	<result property="acquirer_merchant" column="ACQUIRER_MERCHANT" jdbcType="VARCHAR"  />
+	<result property="acquirer_seq" column="ACQUIRER_SEQ" jdbcType="VARCHAR"  />
+	<result property="acquirer_date" column="ACQUIRER_DATE" jdbcType="VARCHAR"  />
+	<result property="acquirer_msg" column="ACQUIRER_MSG" jdbcType="VARCHAR" />
+	<result property="payer_ip" column="PAYER_IP" jdbcType="VARCHAR" />
+	<result property="refnum" column="REFNUM" jdbcType="VARCHAR" nullValue=""  />
+	<result property="authcode" column="AUTHCODE" jdbcType="VARCHAR" nullValue=""  />	
+	<result property="payinfo" column="PAYINFO" jdbcType="VARCHAR" nullValue="" />
+	<result property="createdate" column="CREATEDATE" jdbcType="DATE"  />
+	<result property="closedate" column="CLOSEDATE" jdbcType="DATE" nullValue="2099/12/01 00:00:00"/>
+	<result property="trxsts" column="TRXSTS" jdbcType="VARCHAR" />	
+	<result property="opers" column="OPERS" jdbcType="VARCHAR" nullValue="" />
+	<result property="operdate" column="OPERDATE" jdbcType="DATE" nullValue="2099/12/01 00:00:00" />	
+	<result property="version" column="VERSION" jdbcType="NUMBER" />
+	<result property="trxdesc" column="TRXDESC" jdbcType="VARCHAR" />
+	<result property="id" column="ID" jdbcType="VARCHAR" />
+	<result property="channel" column="CHANNEL" jdbcType="VARCHAR"/>
+	<result property="payment_type" column="PAYMENT_TYPE" jdbcType="VARCHAR"/>
+	<result property="fee_amount" column="FEE_AMOUNT" jdbcType="NUMBER"  nullValue="0"/>		
+ </resultMap>
+<insert id="gw20.trx_insert" parameterClass="trx">
+  <selectKey resultClass="String" keyProperty="id" >  
+       SELECT '11'||TO_CHAR(sysdate,'yymmdd')||LPAD(SEQ_ORDER.nextval,7,'0') AS ID FROM DUAL  
+  </selectKey>
+  insert into gwtrxs
+  (gworders_id, trxnum, trxtype, paymode, amount, currency, servicecode, acquirer_code, acquirer_name, acquirer_merchant, acquirer_date,payer_ip,
+   fromacctid,fromacctnum,buyer_id,buyer_name, payinfo, createdate, closedate, trxsts,version, trxdesc, id,submitdateS,channel,payment_type,operdate,opers,acquirer_id,fee_amount)
+values
+  (#gworders_id#, #trxnum#, #trxtype#, #paymode#, #amount#, #currency#,#servicecode#, #acquirer_code#, 
+  #acquirer_name#, #acquirer_merchant#,#acquirer_date#, #payer_ip#, 
+  #fromacctid#,#fromacctnum#,#buyer_id#,#buyer_name#,#payinfo#, 
+  sysdate, sysdate, #trxsts#, 0, #trxdesc#, #id#,#submitdates#,#channel#,#payment_type#,sysdate,#opers#,#acquirer_id#,#fee_amount#)  
+</insert>
+
+<select id="gw20.trx_findbyTrxnumAndBK" parameterClass="map" resultMap="trx_map">
+  select * from GWTRXS where trxnum=#trxnum# and acquirer_code=#bankcode#
+</select>
+<select id="gw20.trx_firstTrx" resultMap="trx_map" parameterClass="String">
+  select * from (
+  select * from GWTRXS where gworders_id=#value# and (trxsts='1' or trxsts='-1') order by closedate asc 
+  ) where rownum=1
+</select>
+<select id="gw20.trx_findPk" resultMap="trx_map" parameterClass="String">
+   select * from gwtrxs where id=#value#
+</select>
+
+
+<!-- 用于交易结果查询交易状态-->
+<select id="gw20.trx_firstOrderPId" resultMap="trx_map" parameterClass="String">
+	select * from (
+      select * from GWTRXS where gworders_id=#value# order by createdate desc
+  ) where rownum=1
+</select>
+
+<select id="gw20.trx_findbyGwOrderIDAndSerciceCode" parameterClass="map" resultMap="trx_map">
+  select * from GWTRXS where gworders_id=#gworders_id# and serviceCode=#serviceCode#
+</select>
+
+<update id="gw20.updateTrxResult" parameterClass="trx">
+  update GWTRXS set trxsts=#trxsts#,acquirer_seq=#acquirer_seq#,
+  acquirer_date=#acquirer_date#,authcode=#authcode#,refnum=#refnum#,acquirer_msg=#acquirer_msg#,  
+  PAYer_IP=#payer_ip#,closedate=sysdate,payinfo=#payinfo#,version=version+1  
+  where id=#id# and version=#version#
+</update>
+<select id="gw20.trx_withoutProc" parameterClass="String" resultClass="trx">
+  <![CDATA[
+   select g.* from gwtrxs g left join gwproc p on g.id=p.gwt_id 
+   where p.id is null and g.trxsts=1 and g.closedate<sysdate-3/(24*60) and procname=#value#  
+   and trunc(closedate)>trunc(sysdate-1) 
+   ]]>
+</select>
+</sqlMap>
+ 

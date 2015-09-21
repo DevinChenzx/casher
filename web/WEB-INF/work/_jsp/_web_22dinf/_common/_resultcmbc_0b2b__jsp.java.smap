@@ -1,0 +1,23 @@
+SMAP
+_resultcmbc_0b2b__jsp.java
+JSP
+*S JSP
+*F
++ 1 resultCMBC_B2B.jsp
+WEB-INF/common/resultCMBC_B2B.jsp
++ 2 tags.jsp
+common/tags.jsp
++ 3 style.jsp
+common/style.jsp
+*L
+1#1:29
+6#2,2:30,2
+7#2,2:33
+2#1:35
+8#3,2:36,2
+3#1,2:39
+4#1:41,8
+4#1:48
+10#1:49,2
+16#1:51
+*E

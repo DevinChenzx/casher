@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="gb2312"?>
+<HZBANKB2C>
+	<!--杭州银行HTTPS服务器公钥
+	测试:hzbankServer.cer
+	生产:hzbankSSL.cer
+	-->
+	<BankServerCer>@path.resource@/hzbank/hzbankSSL.cer</BankServerCer>
+    <!-- 
+	 API接口地址
+	  测试地址:http://60.191.59.19/hzpayment/DealPOBReq.srv
+	  生产地址:https://ebank-public.hzbank.com.cn/hzpayment/DealPOBReq.srv
+	-->
+	<ApiURL>https://ebank-public.hzbank.com.cn/hzpayment/DealPOBReq.srv</ApiURL>
+	<!-- 
+	订单支付地址
+	测试:http://60.191.59.19/hzpayment/hzbankPay.srv
+	生产:https://ebank-public.hzbank.com.cn/hzpayment/hzbankPay.srv
+	-->
+	<OrderURL>https://ebank-public.hzbank.com.cn/hzpayment/hzbankPay.srv</OrderURL>
+	<EnableLog>true</EnableLog>
+	<LogPath>@path.resource@/hzbank/log/</LogPath>
+	<SettlementFilePath>@path.resource@/hzbank/settlement/</SettlementFilePath>
+	<!--
+	商户签名证书 
+	测试:C:\hzbankjava\HZBANKCert\7571110052.pfx
+	生产:C:\hzbankjava\HZBANKCert\杭州银行商户开户证书.pxf
+	-->
+	<MerchantCertFile>@path.resource@/hzbank/7641110021.pfx</MerchantCertFile>
+	<!--商户签名证书密码 生产时为商户柜面申请证书后，下载设置密码-->
+	<MerchantCertPassword>111111</MerchantCertPassword>
+	<!--验证银行签名证书根证 
+	测试:TESTCA.cer
+	生产：C:\hzbankjava\HZBANKCert\Operation_CA2.cer
+	-->
+	<RootCertFile>@path.resource@/hzbank/Operation_CA2.cer</RootCertFile>
+	<!--
+	银行证书编号
+	测试:7571110030
+	生产:7511110002   
+	-->
+	<BankDN>7511110002</BankDN>
+
+</HZBANKB2C>

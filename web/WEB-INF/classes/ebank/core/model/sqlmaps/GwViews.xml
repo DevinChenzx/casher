@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="gw00">
+ <typeAlias alias="gw00" type="ebank.core.model.domain.GwViewUser"/>
+ <typeAlias alias="gw001" type="ebank.core.model.domain.GwViewUserAccount"/>
+ <typeAlias alias="gw002" type="ebank.core.model.domain.GwModel"/>
+ <typeAlias alias="gw003" type="ebank.core.model.domain.GwDirectBind"/>
+ <typeAlias alias="gw004" type="ebank.core.model.domain.GwMerChannelRate"/>
+ <typeAlias alias="gw005" type="ebank.core.model.domain.CmCustomerChannel"/>
+ <typeAlias alias="gw006" type="ebank.core.model.domain.GwChannel"/>
+ 
+ <!-- 
+  create or replace view GWVIEWUSER as
+  select c.id,c.api_key,ms.enable,c.name 
+  from cm_customer c, mg_customer_service ms 
+  where c.id=ms.customer_id and ms.is_current=1 
+   -->
+ <resultMap id="gwviewuser" class="ebank.core.model.domain.GwViewUser">
+ 	<result property="userId"  column="ID" jdbcType="NUMBER" nullValue="0"/>
+ 	<result property="md5Key"  column="API_KEY"/>
+ 	<result property="mstate"  column="ENABLE"  nullValue="0"/>
+ 	<result property="userAlias"  column="NAME"  />
+ 	<result property="userMobile"  column="MOBILE" nullValue=""/>
+ 	<result property="customer_no" column="CUSTOMER_NO" />
+ 	<result property="login_recepit" column="LOGIN_RECEPIT"/>
+ 	<result property="service_code" column="SERVICE_CODE" />
+ 	<result property="status" column="STATUS" />
+ 	<result property="operid" column="OPERID" jdbcType="NUMBER"/>
+ 	<result property="iscurrent" column="ISCURRENT" nullValue="0"/>
+ 	<result property="fee_params" column="FEE_PARAMS" nullValue=""/>
+ 	<result property="service_params" column="SERVICE_PARAMS" nullValue=""/>
+ 	<result property="fraud_check" column="FRAUD_CHECK" nullValue=""/>
+ 	<result property="company_website" column="COMPANY_WEBSITE" nullValue=""/> 	
+ </resultMap>
+ <resultMap id="gwviewaccount" class="ebank.core.model.domain.GwViewAccount">
+    <result property="user_id" column="USER_ID" />
+	<result property="user_type" column="USER_TYPE" />
+	<result property="login_recepit" column="LOGIN_RECEPIT"  />
+	<result property="login_pwd" column="LOGIN_PWD" />
+	<result property="pay_pwd" column="PAY_PWD" />
+	<result property="acct_amount" column="ACCT_AMOUNT"/>
+	<result property="acct_balance" column="ACCT_BALANCE" />
+	<result property="acct_sts" column="ACCT_STS" />
+	<result property="acct_id" column="ACCT_ID"  />
+	<result property="acct_name" column="ACCT_NAME" />
+	<result property="oper_sts"  column="OPER_STS"/>
+ </resultMap>
+ <resultMap id="gwmodel" class="gw002">
+    <result property="id" column="id" />
+	<result property="customer_no" column="customer_no" />
+	<result property="pay_model" column="pay_model"  />
+ </resultMap>
+ <resultMap id="gwdirectbind" class="gw003">
+    <result property="id" column="ID" />
+	<result property="account_no" column="ACCOUNT_NO" />
+	<result property="customer_no" column="CUSTOMER_NO"  />
+	<result property="limite_amount" column="LIMITE_AMOUNT" />
+	<result property="pay_customer_no" column="PAY_CUSTOMER_NO" />
+ </resultMap>
+ <resultMap id="gwmerchannelrate" class="gw004">
+    <result property="merchantId" column="merchantId" />
+	<result property="feeType" column="feeType" />
+	<result property="feeRate" column="feeRate"  />
+	<result property="isRefundFee" column="isRefundFee" />
+	<result property="acquireIndexc" column="acquireIndexc" />
+ </resultMap>
+ <resultMap id="customerchannel" class="gw005">
+    <result property="id" column="ID" jdbcType="NUMBER" />
+    <result property="customerId" column="CUSTOMER_ID" jdbcType="NUMBER" />
+    <result property="channel_type" column="CHANNEL_TYPE" jdbcType="VARCHAR" />
+    <result property="payment_mode" column="PAYMENT_MODE" jdbcType="VARCHAR" />
+    <result property="payment_type" column="PAYMENT_TYPE" jdbcType="VARCHAR" />
+    <result property="bank_type" column="BANK_TYPE" jdbcType="VARCHAR" />
+    <result property="bank_code" column="BANK_CODE" jdbcType="VARCHAR" />
+    <result property="channel_code" column="CHANNEL_CODE" jdbcType="VARCHAR" />
+    <result property="version" column="VERSION" jdbcType="NUMBER" />
+ </resultMap>
+ 
+ 
+  <resultMap id="boMerhcant" class="gw006">
+    <result property="id" column="ID" jdbcType="NUMBER" />
+ </resultMap>
+ 
+ <select id="gw006.findChannel" resultMap="boMerhcant" parameterClass="map">
+ 	select *
+  from boss.bo_merchant
+ where UPPER(acquire_INDEXC) = #channel_code#
+   AND channel_Sts = '0'
+   AND channel_Type = '1'
+   AND payment_Mode = #pay_type#
+   AND  #amount# &lt;= qutor
+</select>
+
+<select id="gw00.findUser" resultMap="gwviewuser" parameterClass="map">
+  select * from GWVIEWUSER where customer_no=#customer_no# 
+  and service_code=#service_code#
+  and iscurrent=1 
+  and rownum=1
+</select>
+<select id="gw00.findUserBylogin_recepit" resultMap="gwviewuser" parameterClass="map">
+  select * from GWVIEWUSER where 1=1
+  and ENABLE = 1
+  and status = 'normal'
+  and iscurrent=1 
+  and login_recepit =#login_recepit#
+</select>
+<select id="gw00.findUserWithNameID" resultMap="gwviewuser" parameterClass="map">
+  select * from GWVIEWUSER where 1=1 and iscurrent=1
+  <dynamic prepend="">
+        <isNotEmpty prepend="and" property="customer_no">
+        customer_no=#customer_no# 
+        </isNotEmpty>
+  </dynamic>
+  <dynamic prepend="">
+        <isNotEmpty prepend="and" property="login_recepit">
+        login_recepit=lower(#login_recepit#) 
+        </isNotEmpty>
+  </dynamic>
+  <dynamic prepend="">
+        <isNotEmpty prepend="and" property="service_code">
+        SERVICE_CODE=#service_code#
+        </isNotEmpty>
+  </dynamic>         
+</select>
+<select id="gw00.findUserWithNameIDNoService" resultMap="gwviewuser" parameterClass="map">
+  select distinct id, operid,api_key,customer_no,1 as enable,1 as iscurrent,status,name,mobile,'' as service_code,login_recepit,'' as fee_params ,'' as service_params,fraud_check,company_website 
+  from GWVIEWUSER where 1=1
+  <dynamic prepend="">
+        <isNotEmpty prepend="and" property="customer_no">
+        customer_no=#customer_no# 
+        </isNotEmpty>
+  </dynamic>
+  <dynamic prepend="">
+        <isNotEmpty prepend="and" property="login_recepit">
+        login_recepit=lower(#login_recepit#) 
+        </isNotEmpty>
+  </dynamic>  
+</select>
+<select id="gw00.findUserByName" resultMap="gwviewuser" parameterClass="string">
+ select * from GWVIEWUSER where login_recepit=lower(#value#) and rownum=1
+</select>
+<select id="gw00.findModelByCustomID" resultMap="gwmodel" parameterClass="string">
+ select * from gwmodel where customer_no=#value# and rownum=1
+</select>
+<select id="gw00.findAcctByUserAndPwd" resultMap="gwviewaccount" parameterClass="map">
+  select * from GWVIEWACCOUNT WHERE LOGIN_RECEPIT=lower(#username#) and PAY_PWD=#paypwd# and rownum=1
+</select>
+<select id="gw00.findAcctByUser" resultMap="gwviewaccount" parameterClass="string">
+  select * from GWVIEWACCOUNT where LOGIN_RECEPIT=lower(#value#)
+</select>
+<select id="gw00.findRoyaltyUserBind" resultClass="int" parameterClass="map">
+  select count(*) from cm_royalty_binding t inner join cm_customer c on t.partner_id=c.id
+  inner join cm_customer_operator co on t.customer_id=co.customer_id
+  where c.customer_no=#customer_no# and co.default_email=#bind_email# and biz_type=10 and t.status='bind' 
+</select>
+<select id="gw003.findDirectBindByCustomerNoAndPayAccountNo" resultMap="gwdirectbind" parameterClass="map">
+  select * from GWDIRECTBIND t where t.customer_no = #customerNo# and t.account_no = #payAccountNo#
+</select> 
+<select id="gw004.findMerChannelRateByAcquireIndexc" resultMap="gwmerchannelrate" parameterClass="map">
+  select * from GWMERCHANNELRATE t where t.acquireIndexc = #acquireIndexc#
+</select> 
+<select id="gw00.findUserChannel" resultMap="customerchannel" parameterClass="map">  
+  select * 
+  from cm_customer_channel b
+  where b.CUSTOMER_ID=#customerId#
+      and b.channel_code in (    
+		    select upper(t.acquire_indexc)
+		    from gwchannel  t
+		     where t.acquire_indexc not like '%-%'
+		    and t.bank_type='1'
+		    and t.channel_sts='0'
+      )
+</select> 
+<select id="gw00.findUserChannelByPaymentType" resultMap="customerchannel" parameterClass="map">
+  select * from cm_customer_channel where CUSTOMER_ID=#customerId# and payment_type=#paymentType# and channel_code=#channelCode#
+</select>
+<select id="gw00.findUserChannelByChannelCode" resultMap="customerchannel" parameterClass="map">
+  select * from cm_customer_channel where CUSTOMER_ID=#customerId# and channel_code=#channelCode#
+</select> 
+</sqlMap>
+ 
+ 

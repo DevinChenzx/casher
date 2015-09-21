@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="gwsynlog">
+<typeAlias alias="gwsynlog" type="ebank.core.model.domain.GWSynLog"/>
+<typeAlias alias="gw40" type="ebank.core.model.domain.GW40AlertOrder"/>
+<resultMap id="logresult" class="gwsynlog">
+<result property="logseq" column="LOGSEQ"/>
+<result property="bankcode" column="BANKCODE" jdbcType="VARCHAR" nullValue="308"/>
+<result property="transnum" column="TRANSNUM" jdbcType="VARCHAR"/>
+<result property="transamount" column="TRANSAMOUNT" jdbcType="VARCHAR" nullValue="0.00"/>
+<result property="transstate" column="TRANSSTATE" jdbcType="VARCHAR" nullValue="N"/>
+<result property="transdate" column="TRANSDATE"/>
+<result property="versionnum" column="VERSIONNUM" jdbcType="NUMBERIC" nullValue="0"/>
+<result property="batchnum" column="BATCHNUM" jdbcType="VARCHAR" nullValue=""/>
+<result property="bankseq" column="BANKSEQ" jdbcType="VARCHAR" nullValue=""/>
+<result property="xdesc" column="XDESC" jdbcType="VARCHAR" nullValue=""/>
+<result property="cratedate" column="CRATEDATE"/>
+ </resultMap>
+<resultMap id="result" class="gw40">    
+	<result property="orderseq" column="ORDERSEQ"/>
+	<result property="transnum" column="TRANSNUM"/>
+	<result property="transamount" column="TRANSAMOUNT"/>
+	<result property="bankcode" column="BANKCODE"/>
+	<result property="ordernum" column="ORDERNUM"/>
+	<result property="orderstate" column="ORDERSTATE"/>
+	<result property="bankstate" column="BANKSTATE"/>
+	<result property="queryvalue" column="QUERYVALUE" jdbcType="VARCHAR" nullValue=""/>
+	<result property="handleflg" column="HANDLEFLG" jdbcType="VARCHAR" nullValue=""/>
+	<result property="handledate" column="HANDLEDATE"/>
+	<result property="opername" column="OPERNAME" jdbcType="VARCHAR" nullValue=""/>
+	<result property="createdate" column="CREATEDATE"/>
+	<result property="operadvice" column="OPERADVICE" jdbcType="VARCHAR" nullValue=""/>
+	<result property="desc1" column="DESC1" jdbcType="VARCHAR" nullValue=""/>
+	<result property="desc2" column="DESC2" jdbcType="VARCHAR" nullValue=""/> 
+</resultMap>
+<select id="gwsynlog.counts" parameterClass="gwsynlog" resultClass="java.lang.Integer">
+	<![CDATA[
+  select count(TRANSNUM) from gw_synlog 
+  where TRANSNUM=#transnum# 
+  AND CRATEDATE+4>sysdate 
+  AND transamount=#transamount#
+  AND BANKSEQ=#bankseq#
+		]]>
+</select>
+<insert id="gwsynlog.insert" parameterClass="gwsynlog">
+  insert into gw_synlog(
+  LOGSEQ,
+  BANKCODE,
+  TRANSNUM,
+  TRANSAMOUNT,
+  TRANSSTATE,
+  TRANSDATE,
+  VERSIONNUM,
+  BATCHNUM,
+  BANKSEQ,
+  XDESC,
+  CRATEDATE)
+  values(
+  TO_NUMBER('5'||TO_CHAR(sysdate,'yymmdd')||LPAD(SEQ_SYNLOG.nextval,10,'0')),
+  #bankcode:VARCHAR#,
+  #transnum:VARCHAR#,
+  #transamount:VARCHAR#,
+  'N',
+  #transdate:VARCHAR#,
+  #versionnum:NUMERIC#,
+  #batchnum:VARCHAR#,
+  #bankseq:VARCHAR#,
+  #xdesc:VARCHAR#,
+  sysdate
+  )
+</insert>
+<update id="gwsynlog.update" parameterClass="gwsynlog">
+ update gw_synlog set TRANSSTATE=#transstate#,BATCHNUM=#batchnum:VARCHAR#,VERSIONNUM=VERSIONNUM+1 
+ WHERE TRANSNUM=#transnum# and BANKSEQ=#bankseq# and CRATEDATE+3>sysdate
+</update>
+<select id="gwsynlog.select" resultMap="logresult">
+ <![CDATA[
+  select * from gw_synlog s inner join gw10_merchantorder m on s.transnum=m.transnum and s.bankcode=m.servicecode
+  where s.TRANSSTATE='Y' and m.orderstate<>'Y' AND s.TRANSAMOUNT=m.orderprice
+  AND rownum<200 
+  and CRATEDATE+10/(24*60)<sysdate
+  AND CRATEDATE+2>sysdate
+  ]]>
+</select>
+<select id="gwsynlog.pagedselect" resultMap="logresult" parameterClass="map"> 
+   select * from 
+   (select *,rownum r from (   
+	   select logseq, bankcode, transnum, transamount, transstate, transdate, versionnum, batchnum, bankseq, xdesc, cratedate 
+	   from gw_synlog
+	   <dynamic prepend="where">
+		   <isNotEmpty prepend="and" property="transstate">
+		       transstate=#transstate#
+		   </isNotEmpty>
+	   		<isNotEmpty prepend="and" property="startdate">
+	     	<![CDATA[
+	        to_date(#startdate#,'yyyy-MM-dd HH24:mi:ss')<=cratedate
+	     	 ]]> 
+	       </isNotEmpty>
+	      <isNotEmpty prepend="and" property="enddate">
+	      <![CDATA[
+	        to_date(#enddate#,'yyyy-MM-dd HH24:mi:ss')+1>cratedate
+	      ]]>
+	      </isNotEmpty> 	   
+	   </dynamic>
+	   <![CDATA[  
+   ) a where rownum<=#last#
+   ) b where b.r>#first# order by b.cratedate desc
+       ]]>
+</select>
+<select id="gwsynlog.pagedcount" resultClass="java.lang.Integer" parameterClass="map">
+select count(logseq)
+	   from gw_synlog
+	   <dynamic prepend="where">
+		   <isNotEmpty prepend="and" property="transstate">
+		       transstate=#transstate#
+		   </isNotEmpty>
+	   		<isNotEmpty prepend="and" property="startdate">
+	     	<![CDATA[
+	        to_date(#startdate#,'yyyy-MM-dd HH24:mi:ss')<=cratedate
+	     	 ]]> 
+	       </isNotEmpty>
+	      <isNotEmpty prepend="and" property="enddate">
+	      <![CDATA[
+	        to_date(#enddate#,'yyyy-MM-dd HH24:mi:ss')+1>cratedate
+	      ]]>
+	      </isNotEmpty> 	   
+	   </dynamic>
+
+</select>
+<!--  -->
+<delete id="gwsynlog.delete" parameterClass="java.lang.String">  
+  delete from gw_synlog where TRANSNUM=#value# and TRANSSTATE='S'
+</delete>
+<insert id="gw40.insert" parameterClass="gw40">
+insert into gw40_alertorder(	
+	ORDERSEQ,
+	TRANSNUM,
+	TRANSAMOUNT,
+	BANKCODE,
+	ORDERNUM,
+	ORDERSTATE,
+	BANKSTATE,
+	QUERYVALUE,
+	HANDLEFLG,
+	HANDLEDATE,
+	OPERNAME,
+	CREATEDATE,
+	OPERADVICE,
+	DESC1,
+	DESC2
+)
+values(	
+	#orderseq#,
+	#transnum#,
+	#transamount#,
+	#bankcode#,
+	#ordernum#,
+	#orderstate#,
+	#bankstate#,
+	#queryvalue:VARCHAR#,
+	#handleflg#,
+	sysdate,
+	#opername:VARCHAR#,
+	sysdate,
+	#operadvice:VARCHAR#,
+	#desc1:VARCHAR#,
+	#desc2:VARCHAR#
+)
+</insert>
+<delete id="gw40.delete" parameterClass="gw40">  
+  delete from  gw40_alertorder where ORDERSEQ=#orderseq# and TRANSNUM=#transnum#
+</delete>
+<update id="gw40.update" parameterClass="gw40">
+  update gw40_alertorder set HANDLEFLG=#handleflg#,HANDLEDATE=sysdate,OPERNAME=#opername#,
+  OPERADVICE=#operadvice:VARCHAR#,DESC1=#desc1:VARCHAR#,DESC2=#desc2:VARCHAR#
+  where ORDERSEQ=#orderseq# and TRANSNUM=#transnum#
+</update>
+</sqlMap>

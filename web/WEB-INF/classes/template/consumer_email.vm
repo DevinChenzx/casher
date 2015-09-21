@@ -1,0 +1,5 @@
+消费者用户您好:<br>
+吉高在线支付网关为你提供安全的支付服务,
+订单号${ordernum}${payresultdesc},支付金额${payamount},交易号${transnum}
+支付银行：${bankname},支付时间${date}
+

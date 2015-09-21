@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="pre">
+	<typeAlias alias="tradeprecard" type="ebank.core.model.domain.TradePrecard" />
+	<resultMap id="precard_map" class="tradeprecard">
+		<result property="id" column="ID" jdbcType="VARCHAR" />
+		<result property="merid" column="MERID" jdbcType="VARCHAR" />
+		<result property="sellerid" column="SELLERID" jdbcType="VARCHAR" />
+		<result property="systemid" column="SYSTEMID" jdbcType="VARCHAR" />
+		<result property="productname" column="PRODUCTNAME" jdbcType="NUMBER"  />
+		<result property="productnum" column="PRODUCTNUM" jdbcType="VARCHAR" />
+		<result property="amount" column="AMOUNT" jdbcType="NUMBER" />
+		<result property="curcode" column="CURCODE" jdbcType="VARCHAR"	 />
+		<result property="merrcvurl" column="MERRCVURL" jdbcType="VARCHAR"	 />
+		<result property="notifyurl" column="NOTIFYURL" jdbcType="VARCHAR"	 />
+		<result property="ordertime" column="ORDERTIME" jdbcType="DATE" />
+		<result property="ext1" column="EXT1" jdbcType="NUMBER" />
+		<result property="ext2" column="EXT2" jdbcType="VARCHAR" />
+		<result property="paystatus" column="PAYSTATUS" jdbcType="VARCHAR" />
+		<result property="charsets" column="CHARSETS" jdbcType="VARCHAR" />
+		<result property="signtype" column="SIGNTYPE" jdbcType="VARCHAR" />
+		<result property="outtradeno" column="OUTTRADENO" jdbcType="VARCHAR" />
+		<result property="paymentType" column="PAYMENTTYPE" jdbcType="VARCHAR" />
+	</resultMap>
+	<insert id="tradeprecard_insert" parameterClass="tradeprecard">  
+	<selectKey resultClass="String" keyProperty="id">
+			SELECT
+			'10'||TO_CHAR(sysdate,'yymmdd')||LPAD(SEQ_TR_PRECARD.nextval,7,'0')
+			AS id
+			FROM DUAL  
+        </selectKey>        
+         <![CDATA[         
+    insert into TRADE_PRECARD
+   (id,merid,systemid,sellerid,productname,productnum,amount,curcode,merrcvurl,notifyurl,ordertime,ext1,ext2,paystatus,charsets,signtype,outtradeno,paymentType)
+    values (
+  #id#,#merid#,#systemid#,#sellerid#,#productname#,#productnum#, #amount#,#curcode#,#merrcvurl#,#notifyurl#,#ordertime#,#ext1#,#ext2#,#paystatus#,#charsets#,#signtype#,#outtradeno#,#paymentType#)        
+         ]]>
+	</insert>
+	
+	<update id="tradeprecard_update" parameterClass="tradeprecard">
+	update trade_precard set PAYSTATUS=#paystatus#,SYSTEMID=#systemid#,signtype=#signtype# where id=#id#
+	</update>
+	
+	<select id="tradeprecard_select"  parameterClass="map" resultMap="precard_map">
+	<![CDATA[
+	select * from trade_precard  where sellerid=#merid# and outtradeno=#outtradeno# and to_char(ordertime,'yyyymmddhh24miss')=#ordertime#
+	 ]]>
+	</select>
+	
+</sqlMap>

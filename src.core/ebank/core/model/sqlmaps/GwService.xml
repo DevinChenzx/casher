@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="gw01">
+ <typeAlias alias="channel" type="ebank.core.model.domain.GwChannel"/> 
+ <resultMap id="result01" class="channel">
+    <result property="id" column="ID" jdbcType="NUMBER"   />
+	<result property="acquire_code" column="ACQUIRE_CODE" jdbcType="VARCHAR" nullValue="" />
+	<result property="acquire_indexc" column="ACQUIRE_INDEXC" jdbcType="VARCHAR" nullValue=""   />
+	<result property="acquire_merchant" column="ACQUIRE_MERCHANT" jdbcType="VARCHAR" nullValue=""   />
+	<result property="terminal" column="TERMINAL" jdbcType="VARCHAR" nullValue=""  />
+	<result property="acquire_name" column="ACQUIRE_NAME" jdbcType="VARCHAR"  />
+	<result property="service_code" column="SERVICE_CODE" jdbcType="VARCHAR"   />
+	<result property="channel_type" column="CHANNEL_Type" jdbcType="VARCHAR"   />
+	<result property="payment_type" column="PAYMENT_Type" jdbcType="VARCHAR"   />
+	<result property="payment_mode" column="PAYMENT_MODE" jdbcType="VARCHAR"   />
+	<result property="createdate" column="CREATEDATE" jdbcType="DATE"  />
+	<result property="channel_sts" column="CHANNEL_STS" jdbcType="VARCHAR"   />
+	<result property="channel_desc" column="CHANNEL_DESC" jdbcType="VARCHAR" nullValue="" />
+	<result property="day_qutor" column="DAY_QUTOR" jdbcType="NUMBER"  />
+	<result property="qutor" column="QUTOR" jdbcType="NUMBER"  />
+	<result property="account_id" column="ACCOUNT_ID" jdbcType="NUMBER" />
+	<result property="acquire_acctid" column="ACQUIRE_ACCTID" jdbcType="VARCHAR" nullValue="" />
+	<result property="acquire_acct_id" column="ACQUIRER_ACCOUNT_ID" jdbcType="VARCHAR" nullValue="" />	
+ </resultMap>
+
+ <select id="gw01.getChannelById" resultMap="result01" parameterClass="int">
+   select * from GWCHANNEL where ID=#value#
+ </select> 
+ <select id="gw01.getEntChannel"  resultMap="result01" parameterClass="string">
+   select e.id,
+          e.acquire_code,
+          e.acquire_indexc,
+          e.acquire_merchant,
+          e.terminal,
+          e.acquire_name,
+          e.service_code,          
+          e.channel_type,
+          e.payment_type,
+          e.payment_mode,
+          e.createdate,
+          e.channel_desc,
+          e.channel_sts,
+          e.day_qutor,
+          e.qutor,
+          e.account_id,
+          e.acquire_acctid,
+          e.acquirer_account_id as ACQUIRER_ACCOUNT_ID
+   from gwentchannel e inner join gworders g on e.customer_no=g.partnerid
+   where g.id=#value# and g.amount>e.entquota
+ </select>
+ 
+ <parameterMap id="procresult" class="java.util.Map">   
+   <parameter property="orderid"   jdbcType="VARCHAR"    mode="IN"/>
+   <parameter property="indexc"    jdbcType="VARCHAR"  mode="IN"/>  
+   <parameter property="channelid" jdbcType="VARCHAR" mode="OUT"/>   
+ </parameterMap> 
+ 
+  <parameterMap id="procresult4" class="java.util.Map">   
+   <parameter property="amount"  jdbcType="VARCHAR"    mode="IN"/>
+   <parameter property="bankCode"    jdbcType="VARCHAR"  mode="IN"/>  
+   <parameter property="oriChannelId"    jdbcType="VARCHAR"  mode="IN"/>
+   <parameter property="customerId"    jdbcType="VARCHAR"  mode="IN"/>
+   <parameter property="cardType"    jdbcType="VARCHAR"  mode="IN"/>
+   <parameter property="channelId" jdbcType="VARCHAR" mode="OUT"/>   
+ </parameterMap> 
+ 
+ <parameterMap id="procresult2" class="java.util.Map">     
+   <parameter property="orderid" jdbcType="VARCHAR"     mode="IN"/>  
+   <parameter property="slaresult" jdbcType="VARCHAR" mode="OUT"/>
+ </parameterMap>
+ <parameterMap id="procresult3" class="java.util.Map">   
+   <parameter property="orderid"   jdbcType="VARCHAR"    mode="IN"/>
+   <parameter property="indexc"    jdbcType="VARCHAR"  mode="IN"/>
+   <parameter property="amount"    jdbcType="NUMBER"  mode="IN"/>
+   <parameter property="partner"   jdbcType="VARCHAR"  mode="IN"/>    
+   <parameter property="channelid" jdbcType="VARCHAR" mode="OUT"/>   
+ </parameterMap>
+ <procedure id="gw01.getRouteChannel" parameterMap="procresult">
+ <![CDATA[
+   {call PROC_RouteChannel(?,?,?)}
+  ]]>
+ </procedure>
+ <procedure id="gw01.getRouteChannelEXT" parameterMap="procresult3">
+ <![CDATA[
+   {call PROC_RouteChannel_Ext(?,?,?,?,?)}
+  ]]>
+ </procedure>
+ 
+ <procedure id="gw01.getRouteChannelByAmonut" parameterMap="procresult4">
+ <![CDATA[
+   {call PROC_QryChannelByAmount_EXT(?,?,?,?,?,?)}
+  ]]>
+ </procedure>
+ 
+ <procedure id="gw01.getChannelViews" parameterMap="procresult2">
+ <![CDATA[
+   {call PROC_ChannelViews(?,?)}
+  ]]>
+ </procedure>
+ 
+</sqlMap>

@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>			    			
+				<value>classpath:params/service.properties</value>
+			</list>
+		</property>
+	</bean>	 	
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<property name="prefix" value="/WEB-INF/"/>
+		<property name="suffix" value=".jsp"/>		
+	</bean>
+    <bean id="messageResource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+      <property name="basename"><value>event</value></property>
+    </bean>
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver"> 
+    </bean>  
+	<bean id="defaultHandlerMapping" class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"></bean>
+    <bean name="/token.do" class="org.springframework.web.servlet.mvc.ParameterizableViewController">
+        <property name="viewName" value="invalidateToken"/>
+    </bean>  
+    <bean id="Portal" name="Portal" class="ebank.web.controller.PayAccess">
+        <property name="orderService" ref="orderService"/>
+        <property name="userService" ref="userService"/>
+        <property name="localDomain" value="${root.localDomain}"/>
+        <property name="notifyService" ref="httpClientInvoker"/>
+        <property name="slaService" ref="slaService"/>
+        <property name="factory" ref="interfaceFactory"/>
+        <property name="rsaUtil" ref="rSAUtil"/>
+    </bean>
+    <bean name="/ProtocalPay.do" class="ebank.web.controller.PayProtocal">
+        <property name="orderService" ref="orderService"/>
+        <property name="userService" ref="userService"/>        
+        <property name="factory" ref="interfaceFactory"/>
+    </bean>
+    <bean name="/InCashier.do" class="ebank.web.controller.PayInCashier">        
+        <property name="userService" ref="userService"/>       
+        <property name="orderService"><ref bean="orderService"/></property>
+    </bean>
+    <bean id="Pay" class="ebank.web.controller.PayCashier">        
+        <property name="userService" ref="userService"/>
+        <property name="slaService"><ref bean="slaService"/></property>
+        <property name="orderService"><ref bean="orderService"/></property>
+    </bean>
+    <bean name="/PostCashier.do" class="ebank.web.controller.PayCashierConfirm">      
+        <property name="slaService" ref="slaService"/>
+        <property name="orderService" ref="orderService"/>  
+        <property name="userService" ref="userService" />      
+    </bean>
+    <bean id="CompositeCashier" class="ebank.web.controller.CompositeCashier">
+    	<property name="orderService" ref="orderService"/>
+    	<property name="accountService" ref="accountService" />
+    	<property name="userService" ref="userService" />
+    </bean>
+    <bean id="AccountCashier" class="ebank.web.controller.PayAccount">
+        <property name="orderService" ref="orderService"/>
+        <property name="payResultService" ref="payResultService"/>
+        <property name="directPayService" ref="directPayService"/>
+        <property name="userService" ref="userService" />        
+        <property name="resultExport" value="v4/resultExport"/>
+    </bean>
+    <bean id="Ebank" class="ebank.web.controller.PayEbank">        
+        <property name="orderService" ref="orderService"/>
+        <property name="userService" ref="userService"/>
+        <property name="velocityService" ref="velocityTemplateService"/>
+        <property name="slaService"><ref bean="slaService"/></property>
+        <property name="bsf"><ref bean="serviceFactory"/></property>
+    </bean>
+	<bean name="/PayResult.do" class="ebank.web.controller.PayResultController">
+	   <property name="payResultService" ref="payResultService"/>
+	   <property name="orderService" ref="orderService"/>
+	   <property name="resultExport" value="resultexport/default/payresult_v60"/>
+	   <property name="v40Export" value="resultexport/v40/payresult_v40"/>
+	   <property name="enableAgent" value="true"/>
+	   <property name="agentFacadeService" ref="agent"/>	   
+	</bean>
+	<bean name="/PayConfirm.do" class="ebank.web.controller.PayCashierConfirm">
+		<property name="slaService" ref="slaService"/>
+		<property name="orderService" ref="orderService"/>
+		        <property name="userService" ref="userService" />      
+	</bean>
+	<bean id="Charger" class="ebank.web.controller.BuyerCharge">
+	    <property name="slaService" ref="slaService"/>
+	</bean>
+	<bean id="PayRec" class="ebank.web.controller.PayRec">	 	
+	  <property name="orderService" ref="orderService"/>
+	  <property name="payResultService" ref="payResultService"/>
+	  <property name="engineService" ref="engineService"/>	
+	  <property name="services" ref="serviceFactory"/>	 
+	  <property name="resultExport" value="v4/resultExport"/>
+	  <property name="productionMode" value="${production.mode}"/>	  	  
+	</bean>
+	
+	 <bean id="PayNotify" class="ebank.web.controller.PayNotify">	 	
+	  <property name="orderService" ref="orderService"/>
+	  <property name="payResultService" ref="payResultService"/>
+	  <property name="engineService" ref="engineService"/>	
+	  <property name="services" ref="serviceFactory"/>	 
+	  <property name="resultExport" value="v4/resultExport"/>
+	  <property name="productionMode" value="${production.mode}"/>	  	  
+	</bean>
+	
+	<bean id="PreCardPayRec" class="ebank.web.controller.PreCardPayRec">
+	  <property name="tradePrecardService" ref="tradePrecardService"></property>	 	
+	 <property name="payResultService" ref="payResultService"/>
+	  <property name="factory" ref="interfaceFactory"/> 	  
+	</bean>
+	
+	<bean id="PreCardNotify" class="ebank.web.controller.PreCardNotify">
+	  <property name="tradePrecardService" ref="tradePrecardService"></property>
+	  <property name="payResultService" ref="payResultService"/> 
+	</bean>
+	<bean id="PrePayAccess" class="ebank.web.controller.PrePayAccess">
+	<property name="userService" ref="userService"/>
+	  <property name="tradePrecardService" ref="tradePrecardService"></property>
+	  <property name="services" ref="serviceFactory"></property>	
+	  <property name="factory" ref="interfaceFactory"/> 	  
+	</bean>
+	 
+	<bean name="/TradeIdAccess.do" class="ebank.web.controller.ProtocalAccess">
+	    <property name="orderService" ref="orderService"/>
+	    <property name="userService" ref="userService" />
+	</bean>		
+	
+	<bean name="SendSMS" class="ebank.web.controller.SendSMS">
+    	<property name="orderService" ref="orderService"/>
+    	<property name="userService" ref="userService" />
+    	<property name="smsClientService" ref="smsClientService"/>
+    </bean>
+    
+    
+    <bean name="FastPay" class="ebank.web.controller.QuickPayController">
+		<property name="userService" ref="userService"/>
+		<property name="notifyService" ref="httpClientInvoker"/>
+		<property name="localDomain" value="${root.localDomain}"/>
+		<property name="bsf"><ref bean="serviceFactory"/></property>
+	</bean>
+	
+	
+	<bean name="FengPay" class="ebank.web.controller.FastPayController">
+		<property name="userService" ref="userService"/>
+		<property name="notifyService" ref="httpClientInvoker"/>
+		<property name="localDomain" value="${root.localDomain}"/>
+		<property name="bsf"><ref bean="serviceFactory"/></property>
+		<property name="parterInterface"><ref bean="wonderpay"/></property>
+		<property name="orderService"><ref bean="orderService"/></property>
+	</bean>
+	 	
+	<bean name="UnionPay" class="ebank.web.controller.UnionPayController">
+		<property name="userService" ref="userService"/>
+		<property name="notifyService" ref="httpClientInvoker"/>
+		<property name="localDomain" value="${root.localDomain}"/>
+		<property name="bsf"><ref bean="serviceFactory"/></property>
+		<property name="parterInterface"><ref bean="wonderpay"/></property>
+		<property name="orderService"><ref bean="orderService"/></property>
+	</bean> 	
+	 	
+	 	
+	<bean id="httpInterceptor" class="ebank.web.interceptor.HttpInterceptor"/>
+	<bean id="httpTokenInterceptor" class="ebank.web.interceptor.HttpTokenInterceptor"/>
+	<bean id="antiFishInterceptor" class="ebank.web.interceptor.AntiFishInterceptor"/>
+	<bean id="LoginInterceptor" class="ebank.web.interceptor.LoginInterceptor"/>
+	<bean id="cashierMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	   <property name="interceptors">
+	     <list>
+	     <!-- ref bean="LoginInterceptor"/-->
+	     <!-- ref bean="httpInterceptor"/ -->
+	     </list>
+	   </property>
+	    <property name="mappings">
+	     <props>	       
+	       <prop key="/PostCashier.do">/PostCashier.do</prop>
+	       <prop key="/PayConfirm.do">/PayConfirm.do</prop>
+	       <prop key="/Pay">Pay</prop>	
+	       <prop key="/CompositeCashier">CompositeCashier</prop>
+	       <prop key="/AccountCashier">AccountCashier</prop>	
+	       <prop key="/SendSMS">SendSMS</prop>    
+	       <prop key="/fastPay.do">FastPay</prop>  
+	       <prop key="/fastPayment">FengPay</prop>
+	       <prop key="/unionPay">UnionPay</prop>           	       	            
+	     </props>
+	     </property>
+	</bean>
+	<bean id="paygateMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"> 
+	   <property name="interceptors">
+	     <list>
+	     <ref bean="httpTokenInterceptor"/>
+	      <!-- ref bean="httpInterceptor"/ -->
+	     </list>
+	   </property>
+	   <property name="mappings">
+	     <props>       
+	       <prop key="/Ebank">Ebank</prop>
+	       <prop key="/Charger">Charger</prop>		             	       	            
+	     </props>
+	     </property>
+	</bean>
+	<bean id="payAccessInterceptor" class="ebank.web.interceptor.PayAccessInterceptor"/>
+	
+	<bean id="AccessMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	   <property name="interceptors">
+	      <list>	      
+	       <ref bean="antiFishInterceptor"/>
+	       <ref bean="payAccessInterceptor"></ref>
+	      </list>
+	    </property>
+	   <property name="mappings">
+	     <props>
+	        <prop key="/portal">Portal</prop>
+	        <prop key="/Portal">Portal</prop>         
+	        <prop key="/gateway.do">Portal</prop>    	      
+	     </props>
+	   </property> 
+	</bean>
+	<bean id="access_URL" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	   <property name="mappings">
+	     <props>
+	        <prop key="/notify_query.do">Portal</prop>          	      
+	     </props>
+	   </property> 
+	</bean>
+	
+	<bean id="payrecMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">	   
+	   <property name="mappings">
+	     <props>	       
+	        <prop key="/PayBack">PayRec</prop>
+	        <prop key="/PayRec">PayRec</prop>
+	        <prop key="/tftPay/PayRec">PayRec</prop>
+	        <prop key="/bankOnline/PayRec">PayRec</prop>
+	        <prop key="/LefuPayNotify">PayRec</prop>
+	        <prop key="/LefuPayRedirect">PayRec</prop>
+	        <prop key="/LefuPayNotifyMobile">PayRec</prop>
+	        <prop key="/LefuPayRedirectMobile">PayRec</prop>
+	        <prop key="/PayRec/319.sid">PayRec</prop>
+	        <prop key="/PayRec/313.idx">PayRec</prop>
+	        <prop key="/PayRec/317.sid">PayRec</prop>
+	        <prop key="/PayRec/9102.sid">PayRec</prop>
+	        <prop key="/PayRec/1052.sid">PayRec</prop>
+	        <prop key="/PayRec/105.sid">PayRec</prop>
+	        <prop key="/PayRecGBK">PayRec</prop>	   
+	        <prop key="/fengPayNotify">PayRec</prop>    
+	        <prop key="/unionMobilePayNotify">PayRec</prop> 
+	        <prop key="/RongxinNotify">PayRec</prop>
+	     </props>
+	   </property> 
+	</bean>	
+	
+	<bean id="paynotifyMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">	   
+	   <property name="mappings">
+	     <props>	       
+	        <prop key="/PayNotify">PayNotify</prop>     
+	     </props>
+	   </property> 
+	</bean>	
+	
+	<bean id="precardPayrecMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	<property name="mappings">
+	<props>
+	<prop key="/PreCardPayRec">PreCardPayRec</prop>
+	</props>
+	</property>
+	</bean>
+	<bean id="prePayAccessMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	<property name="mappings">
+	<props>
+	<prop key="/PrePayAccess">PrePayAccess</prop> 
+	</props>
+	</property>
+	</bean>
+	<bean id="preCardNotifyMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	<property name="mappings">
+	<props>
+	<prop key="/PreCardNotify">PreCardNotify</prop>
+	</props>
+	</property>
+	</bean>
+	
+	<bean id="payqueryMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	   <property name="mappings">
+	     <props>	                
+	        <prop key="/forward">fw.do</prop>
+	        <prop key="/httpFaultTrxInvoke.do">httpInvokeFaultTrxService</prop>
+	        <prop key="/httpProcInvoke.do">httpInvokePublishService</prop>
+	        <prop key="/httpABCInvoke.do">httpABCService</prop>
+	        <prop key="/httpDirectPay.do">httpInvokeDirectPayService</prop>
+	        <prop key="/httpJMSInvoke.do">httpInvokeJmsService</prop>	        
+	     </props>
+	   </property> 
+	</bean>	
+	<bean name="fw.do" class="ebank.web.controller.SimpleController"/>
+	<bean name="/urlPay.do" class="ebank.web.controller.UrlPayController">
+		<property name="userService" ref="userService"/>
+	</bean>
+	<bean name="/captcha.do" class="ebank.web.controller.CaptchaController"/>
+	  
+	<bean name="/cmbCtl.do" class="ebank.web.controller.CMBController"/>
+	
+	<bean name="/gwFaq.do" class="ebank.web.controller.GwFaqController">
+	    <property name="faqService" ref="faqService"/>
+	</bean>
+	<bean name="/queryResult.do" class="ebank.web.controller.QueryResult">
+		<property name="orderService" ref="orderService"/>
+	</bean>
+	<bean name="/exportResult.do" class="ebank.web.controller.ExportResultPage">
+		<property name="orderService" ref="orderService"/>
+		<property name="queryResultService" ref="queryResultService"/>
+		<property name="payResultService" ref="payResultService"/>
+	</bean>
+	
+</beans>

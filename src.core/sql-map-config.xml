@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+    <settings
+		cacheModelsEnabled="true"
+		enhancementEnabled="true"
+		lazyLoadingEnabled="true"
+		maxRequests="512"
+		maxSessions="256"
+		maxTransactions="128"
+		useStatementNamespaces="false"
+	/>
+	<sqlMap resource="ebank/core/model/sqlmaps/Sequence.xml"/>	
+	<sqlMap resource="ebank/core/model/sqlmaps/GwViews.xml"/>
+	<sqlMap resource="ebank/core/model/sqlmaps/GwExt.xml"/>
+	<sqlMap resource="ebank/core/model/sqlmaps/GwOrders.xml"/>
+	<sqlMap resource="ebank/core/model/sqlmaps/GwTrxs.xml"/>
+	<sqlMap resource="ebank/core/model/sqlmaps/GwNotifyTx.xml"/>
+	<sqlMap resource="ebank/core/model/sqlmaps/GwService.xml"/>	
+	<sqlMap resource="ebank/core/model/sqlmaps/TradePrecard.xml"/>
+	<sqlMap resource="ebank/core/model/sqlmaps/GwPayments.xml"/>
+	<sqlMap resource="ebank/core/model/sqlmaps/GwFaq.xml"/>
+		<sqlMap resource="ebank/core/model/sqlmaps/MerchantCerts.xml"/>
+</sqlMapConfig>

@@ -1,0 +1,1148 @@
+<?xml version="1.0" encoding="gb2312"?>
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:tx="http://www.springframework.org/schema/tx"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd   
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd   
+                        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	 <!-- 工商银行新接口 version 1.0.0.11-->	 
+ 	
+	 <bean id="ICBC_B2C_11" class="ebank.core.bank.logic.ICBC_B2C_11" init-method="config">
+	       <property name="bankname" value="工商银行"/>
+	       <property name="bankcode" value="ICBC"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="102"/>
+	       <property name="relativePath" value="${path.resource}"/>
+	       <property name="paramPath" value="${path.resource}/jsons/ICBC.json"/>   
+	       <property name="publicCert" value="${path.resource}/icbc/icbcpublic.crt"/>      
+	       <property name="merReference" value="${root.dn}"/>         
+         
+	       <property name="prefixnum" value="62"/>
+	       <property name="recurl" value="${root.httprecurl}"/>
+	       <property name="engineService" ref="engineService"/>	
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 
+	 <bean id="SID_102" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="ICBC_B2C_11"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>	
+	  
+	 <!--  移动支付 -->
+	 <bean id="ICBC_B2C_M" class="ebank.core.bank.logic.ICBC_B2C" init-method="config">
+	       <property name="bankname" value="工行手机银行"></property> 
+	       <property name="bankcode" value="ICBC"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="102"/> <!-- like b2c -->
+	       <property name="icbc_name" value="ICBC_MOBILE_B2C"/><!-- 手机接口 -->
+	       <property name="paramPath" value="${path.resource}/jsons/ICBC.json"/>  
+	       <property name="verifyJoinFlag" value="2"/> <!-- 手机-->	
+	       <property name="relativePath" value="${path.resource}"/>       
+	       <property name="publicCert" value="${path.resource}/icbc/admin.crt"/>	       
+	       <property name="prefixnum" value="63"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="engineService" ref="engineService"/>		      
+	       <property name="sequenceservice" ref="sequenceService"/>
+	</bean>
+	<bean id="SID_1023" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="ICBC_B2C_M"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>		 
+	 
+	 <!-- 农业银行 -->
+	 <bean id="ABC" class="ebank.core.bank.logic.ABC" init-method="config">
+	       <property name="bankname" value="农业银行"/>
+	       <property name="bankcode" value="ABC"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="103"/>
+	       <property name="relativePath" value="${path.resource}"/>  
+	       <property name="paramPath" value="${path.resource}/jsons/ABC.json"/>	                   
+	       <property name="prefixnum" value="3"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="httprecurl" value="${root.httprecurl}"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_103" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="ABC"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	  <!-- 招商银行 -->
+	 <bean id="CMB" class="ebank.core.bank.logic.CMB" lazy-init="true" init-method="config">
+	       <property name="bankname" value="招商银行"/> 
+	       <property name="bankcode" value="CMB"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="308"/>                 
+	       <property name="prefixnum" value="5"/> 
+	       <property name="paramPath" value="${path.resource}/jsons/CMB.json"/>      
+	       <property name="payer">
+	        <bean class="cmb.netpayment.Security">
+	         <constructor-arg index="0" value="${path.resource}/cmbchina/public.key"/>   
+	        </bean>
+	       </property>
+	       <property name="recurl" value="${root.recurl}"/>	      
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_308" class="org.springframework.aop.framework.ProxyFactoryBean" lazy-init="true">
+	    <property name="target" ref="CMB"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>	 
+	<!-- 中国银行 -->
+	 <bean id="BOC2" class="ebank.core.bank.logic.BOC2" init-method="config">
+	       <property name="bankname" value="中国银行"></property> 
+	       <property name="bankcode" value="BOC"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="104"/>
+	       <property name="paramPath" value="${path.resource}/jsons/BOC.json"/>       	
+	       <property name="prefixnum" value="22"/>
+	       <property name="recurl" value="${root.recurl}"/>	    
+	       <property name="relativePath" value="${path.resource}"/>	   	           
+	       <property name="sequenceservice" ref="sequenceService"/>	   
+		   <property name="rootCertificatePath" value="${path.resource}/boc/bocnet ca.cer"/>
+		  <!-- <property name="dn" value=""/> -->		   
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_104" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="BOC2"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>	
+	 <bean id="CCB_TJ" class="ebank.core.bank.logic.CCB" init-method="config">
+	       <property name="bankname" value="建设银行"></property> <!-- TJ -->
+	       <property name="bankcode" value="CCB"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="105"/>
+	       <property name="paramPath" value="${path.resource}/jsons/CCB.json"/>	       
+	       <property name="prefixnum" value="2"/>
+	       <property name="recurl" value="${root.dn}/PayRec/105.idx"/>
+	       <property name="desturl" value="https://ibsbjstar.ccb.com.cn/app/ccbMain"/>	       
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_105" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="CCB_TJ"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	  <!-- 交通银行 -->
+	 <bean id="COMM" class="ebank.core.bank.logic.COMM" init-method="config">
+	       <property name="bankname" value="交通银行"></property>
+	       <property name="bankcode" value="BOCM"/> 
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="301"/>
+	       <property name="paramPath" value="${path.resource}/jsons/BOCM.json"/>  
+	       <property name="prefixnum" value="22"/>	       
+		   <property name="jniproxy" ref="jniProxyservice"/>
+		   <property name="jniHttpProxy" ref="jniHttpProxyService"/>		         
+	       <property name="sequenceservice" ref="sequenceService"/>
+		   <property name="recurl" value="${root.httprecurl}"/>		  
+	       <property name="enabled" value="true"/>
+	 </bean>	
+	 <bean id="SID_301" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="COMM"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+				<value>slaPointcutAdvice</value>				            
+	        </list>
+	    </property>	    
+	 </bean>	
+	 <!-- 民生银行 民生卡-->
+	 <bean id="CMBC" class="ebank.core.bank.logic.CMBC" init-method="config">
+	       <property name="bankname" value="民生银行"></property> 
+	       <property name="bankcode" value="CMBC"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="305"/>
+	       <property name="paramPath" value="${path.resource}/jsons/CMBC.json"/>	            
+	       <property name="prefixnum" value="23"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="fileKey" value="${path.resource}/cmbc/cmbc.pfx"/>	
+	       <property name="fileCert" value="${path.resource}/cmbc/cmbc.cer"/>	       
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_305" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="CMBC"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+				<value>slaPointcutAdvice</value>				            
+	        </list>
+	    </property>	    
+	 </bean>
+	 <!-- 民生银行 网银-->
+	 <bean id="CMBC_N" class="ebank.core.bank.logic.CMBC" init-method="config">
+	       <property name="bankname" value="民生银行"></property> 
+	       <property name="bankcode" value="CMBC"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="305"/>	      
+	       <property name="prefixnum" value="24"/>
+	       <property name="paramPath" value="${path.resource}/jsons/CMBC_N.json"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="fileKey" value="${path.resource}/cmbc/CMBC.pfx"/>
+	       <property name="keyPassword" value="nishiwode"/><!-- nishiwode -->
+	       <property name="fileCert" value="${path.resource}/cmbc/cmbc.cer"/>       
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_3051" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="CMBC_N"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+				<value>slaPointcutAdvice</value>				            
+	        </list>
+	    </property>	    
+	 </bean>
+	 <!-- 广发银行 -->
+	 <bean id="GDB" class="ebank.core.bank.logic.GDB" init-method="config">
+	       <property name="bankname" value="广发银行"></property> 
+	       <property name="bankcode" value="GDB"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="306"/>	           
+	       <property name="prefixnum" value="25"/>	
+	       <property name="paramPath" value="${path.resource}/jsons/GDB.json"/>       
+	       <property name="fileCert" value="${path.resource}/gdb/paykey"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="enabled" value="true"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_306" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="GDB"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>	
+	 <!-- 深圳发展银行 -->
+	 <bean id="SDB" class="ebank.core.bank.logic.PingAn" init-method="config">
+	       <property name="bankname" value="平安银行"></property> 
+	       <property name="bankcode" value="SDB"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="307"/>	          
+	       <property name="prefixnum" value="26"/>  
+	       <property name="relativePath" value="${path.resource}"/>  
+	       <property name="paramPath" value="${path.resource}/jsons/SDB.json"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="httprecurl" value="${root.httprecurl}"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="rootCertPath" value="${path.resource}/sdb_b2c/pinganmer.cer"/>
+	       <property name="fileKeyPath" value="${path.resource}/sdb_b2c/pinganmer.jks"/>
+	 </bean>
+	 <bean id="SID_307" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="SDB"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean> 
+	 <!-- 兴业银行 -->
+	 <bean id="CIB" class="ebank.core.bank.logic.CIB" init-method="config">
+	       <property name="bankname" value="兴业银行"></property> 
+	       <property name="bankcode" value="CIB"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="309"/>
+	       <property name="paramPath" value="${path.resource}/jsons/CIB.json"/>
+	       <property name="prefixnum" value="2"/>
+	       <property name="recurl" value="${root.recurl}"/>      
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_309" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="CIB"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean> 
+	 <!-- 华夏银行 -->
+	 <bean id="HXB" class="ebank.core.bank.logic.HuaXia" init-method="config">
+	       <property name="bankname" value="华夏银行"></property> 
+	       <property name="bankcode" value="HXB"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="311"/>
+	       <property name="paramPath" value="${path.resource}/jsons/HXB.json"/>
+	       <property name="prefixnum" value="27"/>	      
+	       <property name="iniFile" value="classes/hxb.ini"/>
+	       <property name="jniproxy" ref="jniProxyservice"/> <!-- 使用jni代理-->      
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_311" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="HXB"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 <!-- 上海浦发 -->
+	 <bean id="SPDB" class="ebank.core.bank.logic.SPDB" init-method="config">
+	       <property name="bankname" value="上海浦发银行"></property> 
+	       <property name="bankcode" value="SPDB"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="314"/>
+	       <property name="relativePath" value="${path.resource}"/>  
+	       <property name="paramPath" value="${path.resource}/jsons/SPDB.json"/>	      
+	       <property name="prefixnum" value="28"/>	     
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_314" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="SPDB"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 <!-- 北京银行 -->
+	 <bean id="BOB" class="ebank.core.bank.logic.BOB" init-method="config">
+	       <property name="bankname" value="北京银行"></property> 
+	       <property name="bankcode" value="BOB"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="310"/>
+	       <property name="corpid" value="00000"/>	                 
+	       <property name="prefixnum" value="1"/>
+	       <property name="recurl" value="${root.ip}"/>
+	       <property name="merchantDN" value=""/>
+	       <property name="serverDN" value=""/>
+	       <property name="desturl" value="https://ebank.bankofbeijing.com.cn/servlet/BCCBEB.ZFStartup"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="engineService" ref="engineService"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_310" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="BOB"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	
+	<!-- 光大银行 -->
+	 <bean id="CEB" class="ebank.core.bank.logic.CEB" init-method="config">
+	       <property name="bankname" value="光大银行"></property> 
+	       <property name="bankcode" value="CEB"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="312"/>  
+	       <property name="relativePath" value="${path.resource}"/>	
+	       <property name="paramPath" value="${path.resource}/jsons/CEB.json"/>
+	       <property name="prefixnum" value="30"/>       
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="httprecurl" value="${root.httprecurl}"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_312" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="CEB"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	<!-- 南京银行 -->
+	 <bean id="NJB" class="ebank.core.bank.logic.NJB" init-method="config">
+	       <property name="bankname" value="南京银行"></property> 
+	       <property name="bankcode" value="BNJ"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="316"/>	           
+	       <property name="prefixnum" value="31"/>	
+	       <property name="paramPath" value="${path.resource}/jsons/NJB.json"/>   
+	       <property name="relativePath" value="${path.resource}"/>	          
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_316" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="NJB"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	<bean id="CBHB" class="ebank.core.bank.logic.CBHB" init-method="config">
+	       <property name="bankname" value="渤海银行"></property> 
+	       <property name="bankcode" value="CBHB"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="317"/>	       
+	       <property name="corpid" value="M20090"/>	       
+	       <property name="prefixnum" value="32"/>	           
+	       <property name="desturl" value="https://ebank.cbhb.com.cn/paymentServer/merchantEntry.do"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="recurl" value="${root.dn}/PayRec/317.idx"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_317" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="CBHB"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	<bean id="BEA" class="ebank.core.bank.logic.BEA" init-method="config">
+	       <property name="bankname" value="东亚银行"></property> 
+	       <property name="bankcode" value="BEA"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="318"/>	       
+	       <property name="paramPath" value="${path.resource}/jsons/BEA.json"/>    
+	       <property name="prefixnum" value="33"/>
+		   <property name="path" value="classes/bea.xml"/>      
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_318" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="BEA"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+     <bean id="BJRCB" class="ebank.core.bank.logic.BJRCB" init-method="config">
+	       <property name="bankname" value="北京农村商业银行"></property> 
+	       <property name="bankcode" value="BJRCB"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="319"/> 
+	       <property name="paramPath" value="${path.resource}/jsons/BJRCB.json"/>	        
+	       <property name="prefixnum" value="39"/>     
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="recurl" value="${root.dn}/PayRec/319.idx"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_319" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="BJRCB"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+     <!-- 
+     <bean id="CITICV6" class="ebank.core.bank.logic.CiticV6" init-method="config">
+	       <property name="bankname" value="中信银行"/> 
+	       <property name="bankcode" value="CITIC"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="313"/>	      
+	       <property name="paramPath" value="${path.resource}/jsons/CITIC313.json"/>	               
+	       <property name="prefixnum" value="35"/>      
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="orderService" ref="orderService"/>
+	       <property name="recurl" value="${root.dn}/PayRec/313.idx"/>	
+           <property name="trustedCrt" value="${path.resource}/citic/ecServer.cer"/>
+		   <property name="signercrt" value="${path.resource}/citic/ecclient.cer"/>
+		   <property name="signerkey" value="${path.resource}/citic/ecclient.key"/>
+           <property name="signerpwd" value="${path.resource}/citic/ecclient.pwd"/>
+	       <property name="util">	       
+           <bean class="ebank.core.bank.logic.CiticV6_util">
+              <constructor-arg value="${path.resource}/citic/lib/"/>
+          </bean>
+           </property>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_313" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="CITICV6"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	   -->
+	 
+	 <!-- 邮政储蓄银行 -->
+	 <bean id="PSBC" class="ebank.core.bank.logic.PSBC" init-method="config">
+	       <property name="bankname" value="邮政储蓄银行"></property> 
+	       <property name="bankcode" value="PSBC"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="323"/>
+	       <property name="paramPath" value="${path.resource}/jsons/PSBC.json"/>           
+	       <property name="prefixnum" value="73"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="relativePath" value="${path.resource}"/>	    
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_323" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="PSBC"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	  <!-- 徽商银行 -->
+	 <bean id="HSBK" class="ebank.core.bank.logic.HSBK" init-method="config">
+	       <property name="bankname" value="徽商银行"></property> 
+	       <property name="bankcode" value="HSBK"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="333"/>
+	       <property name="paramPath" value="${path.resource}/jsons/HSBK.json"/>	              
+	       <property name="prefixnum" value="73"/>
+	       <property name="recurl" value="${root.recurl}"/>	      
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_333" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="HSBK"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	   <!-- 上海银行 -->
+	 <bean id="SHBANK" class="ebank.core.bank.logic.SHBANK" init-method="config">
+	       <property name="bankname" value="上海银行"></property> 
+	       <property name="bankcode" value="SHBANK"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="334"/>
+	       <property name="relativePath" value="${path.resource}"/>	   
+	       <property name="paramPath" value="${path.resource}/jsons/SHBANK.json"/>	              
+	       <property name="prefixnum" value="73"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="httprecurl" value="${root.httprecurl}"/>	      
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_334" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="SHBANK"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	  <!-- 银联 -->
+	  <!-- 
+	 <bean id="UNIONPAY" class="ebank.core.bank.logic.UNIONPAY2" init-method="config">
+	       <property name="bankname" value="中国银联"/> 
+	       <property name="bankcode" value="UNIONPAY"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0702"/>
+	       <property name="paramPath" value="${path.resource}/jsons/UNIONPAY.json"/>         	               
+	       <property name="prefixnum" value="70"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="rootIp" value="${root.ip}"/>	        
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_0702" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="UNIONPAY"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	  -->
+	  
+	 <bean id="UNIONPAYDEBIT" class="ebank.core.bank.logic.UNIONPAY2" init-method="config">
+	       <property name="bankname" value="中国银联"/> 
+	       <property name="bankcode" value="UNIONPAY"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0701"/>
+	       <property name="paramPath" value="${path.resource}/jsons/UNIONPAY_DEBIT.json"/>         	               
+	       <property name="prefixnum" value="71"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="rootIp" value="${root.ip}"/>	        
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_0701" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="UNIONPAYDEBIT"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>	
+	 <!-- 预付卡 -->
+	 <bean id="PRECARD" class="ebank.core.bank.logic.PreCard" init-method="config">
+	       <property name="bankname" value="预付费卡"/> 
+	       <property name="bankcode" value="PRECARD"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0800"/>
+	       <property name="paramPath" value="${path.resource}/jsons/PRECARD.json"/>       	               
+	       <property name="prefixnum" value="70"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.ip}/PreCardPayRec"/>
+	       <property name="notifyUrl" value="${root.ip}/PreCardNotify"></property>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_0800" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="PRECARD"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	  <bean id="YEEPAY" class="ebank.core.bank.third.YeePay" init-method="config">
+	       <property name="bankname" value="易宝支付"/> 
+	       <property name="bankcode" value="YEP"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0900"/>
+	       <property name="paramPath" value="${path.resource}/jsons/YEEPAY.json"/>       	               
+	       <property name="prefixnum" value="70"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.httprecurl}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_0900" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="YEEPAY"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 <bean id="S_BILL" class="ebank.core.bank.third.Bill99" init-method="config">
+	       <property name="bankname" value="快钱支付"/> 
+	       <property name="bankcode" value="BILL"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0901"/>
+	       <property name="paramPath" value="${path.resource}/jsons/99BILL.json"/>       	               
+	       <property name="prefixnum" value="70"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.httprecurl}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_0901" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="S_BILL"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 <!--支付宝支付-->
+	 <bean id="ALIPAY" class="ebank.core.bank.third.Alipay" init-method="config">
+	       <property name="bankname" value="支付宝支付"/> 
+	       <property name="bankcode" value="ALP"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0902"/>
+	       <property name="paramPath" value="${path.resource}/jsons/ALIPAY.json"/>       	               
+	       <property name="prefixnum" value="70"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.httprecurl}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_0902" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="ALIPAY"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	  <!--汇付天下支付-->
+	 <bean id="CHINAPNR" class="ebank.core.bank.third.ChinaPnr" init-method="config">
+	       <property name="bankname" value="汇付天下支付"/> 
+	       <property name="bankcode" value="CBP"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0903"/>
+	       <property name="paramPath" value="${path.resource}/jsons/CHINAPNR.json"/>       	               
+	       <property name="prefixnum" value="70"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.httprecurl}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_0903" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="CHINAPNR"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	  <!--环讯支付-->
+	 <bean id="IPS" class="ebank.core.bank.third.IPS" init-method="config">
+	       <property name="bankname" value="环讯支付"/> 
+	       <property name="bankcode" value="IPS"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0904"/>
+	       <property name="paramPath" value="${path.resource}/jsons/IPS.json"/>       	               
+	       <property name="prefixnum" value="70"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.httprecurl}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_0904" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="IPS"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 <!--吉卡支付-->
+	 <bean id="REAPAL" class="ebank.core.bank.third.ReaPal" init-method="config">
+	       <property name="bankname" value="吉卡支付"/> 
+	       <property name="bankcode" value="REA"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0905"/>
+	       <property name="paramPath" value="${path.resource}/jsons/REAPAL.json"/>       	               
+	       <property name="prefixnum" value="70"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.httprecurl}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_0905" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="REAPAL"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 <!--网银在线支付-->
+	 <bean id="ONLINE" class="ebank.core.bank.third.Online" init-method="config">
+	       <property name="bankname" value="网银在线"/> 
+	       <property name="bankcode" value="ONLINE"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0906"/>
+	       <property name="paramPath" value="${path.resource}/jsons/ONLINE.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.httprecurl}GBK"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_0906" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="ONLINE"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+
+
+	 <!--网银在线支付(五大行)-->
+	 <bean id="ONLINE_FIVE" class="ebank.core.bank.third.Online" init-method="config">
+	       <property name="bankname" value="网银在线(五大行)"/> 
+	       <property name="bankcode" value="ONLINE"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0909"/>
+	       <property name="paramPath" value="${path.resource}/jsons/ONLINE_FIVE.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.httprecurl}GBK"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_0909" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="ONLINE_FIVE"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 
+	 	 <!--网银在线快捷支付-->
+	 <bean id="FASTPAY" class="ebank.core.bank.third.FastPay" init-method="config">
+	       <property name="bankname" value="网银在线快捷支付"/> 
+	       <property name="bankcode" value="chinabank"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="2907"/>
+	       <property name="paramPath" value="${path.resource}/jsons/FASTPAY.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   
+	       <property name="jkspath" value="${path.resource}/fastpay/quick.keystore"/>	   		        	      
+	       <property name="recurl" value="${bankonline.payResult}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_2907" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="FASTPAY"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 	 	 <!--网银在线快捷支付-->
+	 <bean id="FENGPAY" class="ebank.core.bank.third.FengFuPay" init-method="config">
+	       <property name="bankname" value="丰付快捷支付"/> 
+	       <property name="bankcode" value="fengPay"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="2927"/>
+	       <property name="paramPath" value="${path.resource}/jsons/FENGPAY.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   
+	       <property name="recurl" value="${root.httprecurl}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_2927" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="FENGPAY"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 
+	 
+	 
+	 <!--银联手机快捷支付-->
+	 <bean id="UNIONMOBILEPAY" class="ebank.core.bank.third.UnionMobilePayNew" init-method="config">
+	       <property name="bankname" value="银联手机快捷"/> 
+	       <property name="bankcode" value="unionmobile"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="2928"/>
+	       <property name="paramPath" value="${path.resource}/jsons/UnionMobilePay.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   
+	       <property name="recurl" value="${root.httprecurl}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_2928" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="UNIONMOBILEPAY"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	
+		 
+	 <!--银联快捷支付-->
+	 <bean id="UNIONPAY" class="ebank.core.bank.third.UnionPay" init-method="config">
+	       <property name="bankname" value="银联网关"/> 
+	       <property name="bankcode" value="UNIONGATEWAY"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="2929"/>
+	       <property name="paramPath" value="${path.resource}/jsons/UnionPay.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.recurl}"/>   
+	       <property name="httprecurl" value="${root.httprecurl}"/>  
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       
+	 </bean>
+	 <bean id="SID_2929" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="UNIONPAY"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	  
+	 	 	 <!--网银在线快捷支付-->
+	 <bean id="FASTPAY_C" class="ebank.core.bank.third.FastPay" init-method="config">
+	       <property name="bankname" value="网银在线快捷支付"/> 
+	       <property name="bankcode" value="chinabank"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="2910"/>
+	       <property name="paramPath" value="${path.resource}/jsons/FASTPAY.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   
+	       <property name="jkspath" value="${path.resource}/fastpay/quick.keystore"/>	   		        	      
+	       <property name="recurl" value="${bankonline.payResult}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_2910" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="FASTPAY_C"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 	 	 <!-- 腾付通快捷支付-->
+	 <bean id="TFTPAY" class="ebank.core.bank.logic.TFTPay" init-method="config">
+	       <property name="bankname" value="腾付通"/> 
+	       <property name="bankcode" value="tft"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="2908"/>
+	       <property name="paramPath" value="${path.resource}/jsons/TFTPAY.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   
+	       <property name="recurl" value="${root.httprecurl}GBK"/>
+	       <property name="payResultRec" value="${payResult.url}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_2908" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="TFTPAY"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 
+	 
+	 	<!--连联通-->
+	 <bean id="yintongPAY" class="ebank.core.bank.third.YintongPay" init-method="config">
+	       <property name="bankname" value="连连银通"/> 
+	       <property name="bankcode" value="YINTONG"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="2909"/>
+	       <property name="paramPath" value="${path.resource}/jsons/YintongPAY.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.recurl}"/>   
+	       <property name="httprecurl" value="${root.httprecurl}"/>  
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_2909" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="yintongPAY"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 
+	 
+	 	 
+	 	<!--融信通-->
+	 <bean id="rongxinPAY" class="ebank.core.bank.third.RongxinPay" init-method="config">
+	       <property name="bankname" value="融信通"/> 
+	       <property name="bankcode" value="RONGXIN"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="2911"/>
+	       <property name="paramPath" value="${path.resource}/jsons/RongxinPAY.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.recurl}"/>   
+	       <property name="httprecurl" value="${root.httprecurl}"/>  
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_2911" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="rongxinPAY"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 
+	 <!-- 乐富在线支付 -->
+	 	 <bean id="LEFU" class="ebank.core.bank.third.LeFu" init-method="config">
+	       <property name="bankname" value="乐富"/> 
+	       <property name="bankcode" value="LEFU"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0907"/>
+	       <property name="paramPath" value="${path.resource}/jsons/LEFU.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.httprecurl}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_0907" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="LEFU"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 
+	 	 <!-- 乐富在线支付 -->
+	 	 <bean id="LEFU_MOBILE" class="ebank.core.bank.third.LeFuMobile" init-method="config">
+	       <property name="bankname" value="乐富移动支付"/> 
+	       <property name="bankcode" value="LEFU_MOBILE"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0917"/>
+	       <property name="paramPath" value="${path.resource}/jsons/LEFU_MOBILE.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.httprecurl}"/>   
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_0917" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="LEFU_MOBILE"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	<!--汇付在线支付-->
+	 <bean id="HEEPAY" class="ebank.core.bank.third.HeePay" init-method="config">
+	       <property name="bankname" value="汇付宝"/> 
+	       <property name="bankcode" value="HEEPAY"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="0908"/>
+	       <property name="paramPath" value="${path.resource}/jsons/HEEPAY.json"/>       	               
+	       <property name="prefixnum" value="60"/>	 
+	       <property name="relativePath" value="${path.resource}"/>	   	        	      
+	       <property name="recurl" value="${root.recurl}"/>   
+	       <property name="httprecurl" value="${root.httprecurl}"/>  
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 
+	 <bean id="SID_0908" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="HEEPAY"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 
+	 	 
+	  <!-- 杭州银行 -->
+	 <bean id="HZBANK" class="ebank.core.bank.logic.HZBANK"
+	init-method="config">
+	       <property name="bankname" value="杭州银行"></property> 
+	       <property name="bankcode" value="HZBANK"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="335"/>
+	       <property name="relativePath" value="${path.resource}"/>	   
+	       <property name="path"     value="classes/B2CMerchant.xml"/>
+	       <property name="paramPath" value="${path.resource}/jsons/HZBANK.json"/>	              
+	       <property name="prefixnum" value="74"/>
+	       <property name="recurl" value="${root.httprecurl}"/>	      
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_335" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="HZBANK"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 <!-- 中国银行快捷支付 -->
+	 <bean id="LITEPAY" class="ebank.core.bank.third.LitePay" init-method="config">
+	       <property name="bankname" value="银联快捷支付"></property> 
+	       <property name="bankcode" value="LITEPAY"/>
+	       <property name="paytype" value="0"/>
+	       <property name="idx"     value="108"/>
+	       <property name="paramPath" value="${path.resource}/jsons/LITEPAY.json"/>       	
+	       <property name="prefixnum" value="22"/>
+	       <property name="recurl" value="${root.recurl}"/>	    
+	       <property name="relativePath" value="${path.resource}"/>	   	           
+	       <property name="sequenceservice" ref="sequenceService"/>	   
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_108" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="LITEPAY"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>	
+	 
+	 <!-- advice -->   
+	 <bean id="bankAdvice" class="ebank.core.bank.logic.BankAdvice">	 
+	 </bean>
+	 <bean id="slaAdvice" class="ebank.core.bank.logic.SlaAdvice">
+	    <property name="slaservice" ref="slaService"/>	 
+	 </bean>	 
+	 	
+	 <bean id="bankPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+       <property name="patterns">
+        <list><value>.*generateOrderID.*</value></list>
+       </property>      
+     </bean>
+     <bean id="defaultAdvice" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+        <property name="advice" ref="bankAdvice"/>
+        <property name="pointcut" ref="bankPointcut"/>
+     </bean>
+     <bean id="slaPointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut">
+       <property name="patterns">
+        <list><value>.*sendOrderToBank.*</value></list>
+       </property>      
+     </bean>
+     <bean id="slaPointcutAdvice" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+        <property name="advice" ref="slaAdvice"/>
+        <property name="pointcut" ref="slaPointcut"/>
+     </bean>
+</beans>

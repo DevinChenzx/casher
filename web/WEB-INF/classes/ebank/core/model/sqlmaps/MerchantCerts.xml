@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="mcerts">
+	<typeAlias alias="certs" type="ebank.core.model.domain.MerchantCertificates" />
+	<typeAlias alias="mcert" type="ebank.core.model.domain.MerchantCertificate" />	
+	
+	
+	<resultMap id="certs_map" class="certs">
+	  <result property="merchantNo" column="MERCHANT_NO" jdbcType="VARCHAR" />
+	  <result property="merchantPublicKey" column="MERCHANT_PUBLIC_KEY" jdbcType="VARCHAR" />
+	  <result property="merchantPwd" column="MERCHANT_PWD" jdbcType="VARCHAR" />
+	  <result property="merchantPrivateKey" column="MERCHANT_PRIVATE_KEY" jdbcType="VARCHAR" />
+	  <result property="storePwd" column="STORE_PWD" jdbcType="VARCHAR" />
+	  <result property="createDate" column="CREATE_DATE" jdbcType="DATETIME" />
+	</resultMap>
+	
+	<select id="mcerts.obtionMerKey" resultMap="certs_map"
+		parameterClass="String">
+		select * from CM_CERTIFICATES where merchant_no=#merchantNo#
+	</select>
+	
+	<resultMap id="merchantCert" class="mcert">
+	  <result property="certPath" column="cert_path" jdbcType="VARCHAR" />
+	  <result property="certDate" column="cert_date" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="mcerts.obtionMerKeyById" resultMap="merchantCert"
+		parameterClass="String">
+		select cert_path,cert_date
+  from boss.bo_agent_pay_service_params a, boss.Bo_Customer_Service b
+ 	where a.id = b.id
+   and b.customer_id = #customerId#
+   and b.service_code='online'
+	</select>
+
+</sqlMap>

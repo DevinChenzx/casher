@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="gb2312"?>
+<BEAB2C>
+	<ApiURL>https://ebank.hkbea.com.cn/busbank/</ApiURL>					
+	<OrderURL>https://ebank.hkbea.com.cn/payment/merpayb2c.do</OrderURL>			
+		
+	<EnableLog>false</EnableLog>														
+	<LogPath>E:\workspace06\payment_core</LogPath>											
+	<SettlementFilePath>E:\workspace06\payment_core\keys\bea</SettlementFilePath>				
+	<MerchantCertFile>E:\workspace06\payment_core\keys\bea\0400000008.pfx</MerchantCertFile>			
+	<MerchantCertPassword>nishiwode</MerchantCertPassword> 							
+	<RootCertFile>E:\workspace06\payment_core\keys\bea\Operation_CA2.cer</RootCertFile>					
+    <BankDN>0000000000</BankDN>
+</BEAB2C>

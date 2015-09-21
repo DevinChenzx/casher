@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="gw200">
+ <typeAlias alias="faq" type="ebank.core.model.domain.GwFaq"/>  
+ <resultMap id="faq_map" class="faq">
+    
+	<result property="id" column="ID" jdbcType="NUMBER"  />
+	<result property="trxno" column="TRXNO" jdbcType="VARCHAR" />
+	<result property="ispay" column="ISPAY" jdbcType="VARCHAR"  />
+	<result property="contact" column="CONTACT" jdbcType="VARCHAR"  />
+	<result property="quedesc" column="QUEDESC" jdbcType="VARCHAR" />
+	<result property="issend" column="ISSEND" jdbcType="VARCHAR"  />
+	<result property="status" column="STATUS" jdbcType="VARCHAR"  />
+	<result property="proceResult" column="PROCERESULT" jdbcType="VARCHAR" />
+	<result property="createdate" column="CREATEDATE" jdbcType="DATE"  />
+		
+ </resultMap>
+<insert id="gw200.faq_insert" parameterClass="faq">
+  <selectKey resultClass="long" keyProperty="id" >  
+       SELECT SEQ_GWFAQ.nextval AS ID FROM DUAL  
+  </selectKey>
+  insert into gwfaq
+  (id,trxno,ispay,contact,quedesc,issend,status,createdate)
+values
+  (#id#, #trxno#, #ispay#, #contact#, #quedesc#, 0, 0, sysdate)  
+</insert>
+
+<update id="gw200.faq_update" parameterClass="faq">
+  update gwfaq 
+  	set ispay = #ispay#,contact = #contact#,quedesc= #quedesc#,createdate=sysdate
+  where trxno = #trxno#
+</update>
+
+<select id="gw200.faq_findByTrxno" resultMap="faq_map" parameterClass="String">
+  select * from gwfaq where trxno = #trxno#
+</select>
+
+</sqlMap>
+ 

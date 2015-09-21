@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+			    "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	 <bean id="PREPAYCARD" class="ebank.core.bank.logic.PREPAYCARD" init-method="config">
+	       <property name="bankname" value="预付费卡"/> 
+	       <property name="bankcode" value="PREPAYCARD"/>
+	       <property name="paytype" value="8"/>
+	       <property name="idx"     value="8101"/>
+	       <property name="paramPath" value="${path.resource}/jsons/PREPAYMENTCARD.json"/>
+	       <property name="prefixnum" value="9"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="httprecurl" value="${root.httprecurl}"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_8101" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target"><ref local="PREPAYCARD"/></property>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	  <bean id="FXPPAYCARD" class="ebank.core.bank.logic.FXPPAYCARD" init-method="config">
+	       <property name="bankname" value="如意卡"/> 
+	       <property name="bankcode" value="FXPPAYCARD"/>
+	       <property name="paytype" value="8"/>
+	       <property name="relativePath" value="${path.resource}"/>
+	       <property name="idx"     value="8102"/>
+	       <property name="paramPath" value="${path.resource}/jsons/FXPPAYCARD.json"/>
+	       <property name="prefixnum" value="7"/>
+	       <property name="recurl" value="${root.httprecurl}"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_8102" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target"><ref local="FXPPAYCARD"/></property>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	  <bean id="CREDITCARD" class="ebank.core.bank.logic.CREDITCARD" init-method="config">
+	       <property name="bankname" value="易行卡"/> 
+	       <property name="bankcode" value="CREDITCARD"/>
+	       <property name="paytype" value="8"/>
+	       <property name="relativePath" value="${path.resource}"/>
+	       <property name="idx"     value="8103"/>
+	       <property name="paramPath" value="${path.resource}/jsons/CREDITCARD.json"/>
+	       <property name="prefixnum" value="9"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_8103" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target"><ref local="CREDITCARD"/></property>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	  <bean id="FXCCARD" class="ebank.core.bank.logic.FXPPAYCARD" init-method="config">
+	       <property name="bankname" value="如意封闭卡"/> 
+	       <property name="bankcode" value="FXCCARD"/>
+	       <property name="paytype" value="8"/>
+	       <property name="relativePath" value="${path.resource}"/>
+	       <property name="idx"     value="8104"/>
+	       <property name="paramPath" value="${path.resource}/jsons/FXCCARD.json"/>
+	       <property name="prefixnum" value="7"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_8104" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target"><ref local="FXCCARD"/></property>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+</beans>

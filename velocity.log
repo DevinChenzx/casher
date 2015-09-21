@@ -1,0 +1,37 @@
+Fri May 03 11:20:55 CST 2013  [debug] AvalonLogSystem initialized using logfile 'velocity.log'
+Fri May 03 11:20:55 CST 2013   [info] ************************************************************** 
+Fri May 03 11:20:55 CST 2013   [info] Starting Jakarta Velocity v1.3.1
+Fri May 03 11:20:55 CST 2013   [info] RuntimeInstance initializing.
+Fri May 03 11:20:55 CST 2013   [info] Default Properties File: org\apache\velocity\runtime\defaults\velocity.properties
+Fri May 03 11:20:55 CST 2013   [info] Trying to use logger class org.apache.velocity.runtime.log.AvalonLogSystem
+Fri May 03 11:20:55 CST 2013   [info] Using logger class org.apache.velocity.runtime.log.AvalonLogSystem
+Fri May 03 11:20:55 CST 2013   [info] Default ResourceManager initializing. (class org.apache.velocity.runtime.resource.ResourceManagerImpl)
+Fri May 03 11:20:55 CST 2013   [info] Resource Loader Instantiated: org.apache.velocity.runtime.resource.loader.FileResourceLoader
+Fri May 03 11:20:55 CST 2013   [info] FileResourceLoader : initialization starting.
+Fri May 03 11:20:55 CST 2013   [info] FileResourceLoader : adding path 'template//'
+Fri May 03 11:20:55 CST 2013   [info] FileResourceLoader : initialization complete.
+Fri May 03 11:20:55 CST 2013   [info] Resource Loader Instantiated: org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+Fri May 03 11:20:55 CST 2013   [info] ClasspathResourceLoader : initialization starting.
+Fri May 03 11:20:55 CST 2013   [info] ClasspathResourceLoader : initialization complete.
+Fri May 03 11:20:55 CST 2013   [info] ResourceCache : initialized. (class org.apache.velocity.runtime.resource.ResourceCacheImpl)
+Fri May 03 11:20:55 CST 2013   [info] Default ResourceManager initialization complete.
+Fri May 03 11:20:55 CST 2013   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Literal
+Fri May 03 11:20:55 CST 2013   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Macro
+Fri May 03 11:20:55 CST 2013   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Parse
+Fri May 03 11:20:55 CST 2013   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Include
+Fri May 03 11:20:55 CST 2013   [info] Loaded System Directive: org.apache.velocity.runtime.directive.Foreach
+Fri May 03 11:20:55 CST 2013   [info] Created: 20 parsers.
+Fri May 03 11:20:55 CST 2013   [info] Velocimacro : initialization starting.
+Fri May 03 11:20:55 CST 2013   [info] Velocimacro : adding VMs from VM library template : VM_global_library.vm
+Fri May 03 11:20:55 CST 2013  [error] ResourceManager : unable to find resource 'VM_global_library.vm' in any resource loader.
+Fri May 03 11:20:55 CST 2013   [info] Velocimacro : error using  VM library template VM_global_library.vm : org.apache.velocity.exception.ResourceNotFoundException: Unable to find resource 'VM_global_library.vm'
+Fri May 03 11:20:55 CST 2013   [info] Velocimacro :  VM library template macro registration complete.
+Fri May 03 11:20:55 CST 2013   [info] Velocimacro : allowInline = true : VMs can be defined inline in templates
+Fri May 03 11:20:55 CST 2013   [info] Velocimacro : allowInlineToOverride = false : VMs defined inline may NOT replace previous VM definitions
+Fri May 03 11:20:55 CST 2013   [info] Velocimacro : allowInlineLocal = false : VMs defined inline will be  global in scope if allowed.
+Fri May 03 11:20:55 CST 2013   [info] Velocimacro : messages on  : VM system will output logging messages
+Fri May 03 11:20:55 CST 2013   [info] Velocimacro : autoload off  : VM system will not automatically reload global library macros
+Fri May 03 11:20:55 CST 2013   [info] Velocimacro : initialization complete.
+Fri May 03 11:20:55 CST 2013   [info] Velocity successfully started.
+Fri May 03 11:20:55 CST 2013   [info] ResourceManager : found template/bank.vm with loader org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+Fri May 03 11:22:25 CST 2013   [info] ResourceManager : found template/bank.vm with loader org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader

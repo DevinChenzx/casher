@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+			    "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	 <bean id="CCB_B2B" class="ebank.core.bank.b2b.CCB" init-method="config">
+	       <property name="bankname" value="建设银行"/>
+	       <property name="bankcode" value="CCB_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9105"/>
+	       <property name="paramPath" value="${path.resource}/jsons/CCB_B2B.json"/>
+	       <property name="prefixnum" value="7"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_9105" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target"><ref local="CCB_B2B"/></property>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 <!-- 中国银行 -->
+	 <bean id="BOC_B2B" class="ebank.core.bank.b2b.BOC" init-method="config">
+	       <property name="bankname" value="中国银行"/> 
+	       <property name="bankcode" value="BOC_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9104"/>
+	       <property name="prefixnum" value="22"/>
+	       <property name="recurl" value="${root.recurl}"/>	  
+	       <property name="paramPath" value="${path.resource}/jsons/BOC_B2B.json"/>
+	       <property name="relativePath" value="${path.resource}"/>	   	           
+	       <property name="sequenceservice" ref="sequenceService"/>
+		   <property name="engineService" ref="engineService"/>
+		  <!-- <property name="dn" value=""/> -->		   
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_9104" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="BOC_B2B"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>	
+	 
+	 <bean id="ABC_B2B" class="ebank.core.bank.b2b.ABC" init-method="config">
+	       <property name="bankname" value="农业银行"/>
+	       <property name="bankcode" value="ABC_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9103"/>
+	       <property name="relativePath" value="${path.resource}"/>	  
+	       <property name="paramPath" value="${path.resource}/jsons/ABC_B2B.json"/>
+	       <property name="prefixnum" value="31"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	 </bean>
+	 <bean id="SID_9103" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target"><ref local="ABC_B2B"/></property>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean> 
+	
+	<bean id="ICBC_B2B" class="ebank.core.bank.b2b.ICBC" init-method="config">
+	       <property name="bankname" value="工商银行"/>
+	       <property name="bankcode" value="ICBC_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9102"/>
+	       <property name="relativePath" value="${path.resource}"/>	  
+	       <property name="paramPath" value="${path.resource}/jsons/ICBC_B2B.json"/>
+	       <property name="prefixnum" value="62"/>
+	       <property name="recurl" value="${root.httprecurl}GBK"/>
+	       <property name="engineService"  ref="engineService"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_9102" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target"><ref local="ICBC_B2B"/></property>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean> 
+	 <!--招商银行企业版 -->
+	 <bean id="CMB_B2B" class="ebank.core.bank.b2b.CMB" lazy-init="true" init-method="config">
+	       <property name="bankname" value="招商银行"/> 
+	       <property name="bankcode" value="CMB_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9308"/>                 
+	       <property name="recurl" value="${root.recurl}GBK"/>
+	       <property name="paramPath" value="${path.resource}/jsons/CMB_B2B.json"/>   
+	       <property name="prefixnum" value="63"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_9308" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="CMB_B2B"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>
+	        </list>
+	    </property>	    
+	 </bean>
+	  <!--光大银行企业版 -->
+	 <bean id="CEB_B2B" class="ebank.core.bank.b2b.CEB" init-method="config">
+	       <property name="bankname" value="光大银行"/> 
+	       <property name="bankcode" value="CEB_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9312"/>  
+	       <property name="relativePath" value="${path.resource}"/>	
+	       <property name="paramPath" value="${path.resource}/jsons/CEB_B2B.json"/>
+	       <property name="prefixnum" value="30"/>       
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="httprecurl" value="${root.httprecurl}"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_9312" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="CEB_B2B"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 <!--浦发银行企业版 -->
+	 <bean id="SPDB_B2B" class="ebank.core.bank.b2b.SPDB" init-method="config">
+	       <property name="bankname" value="浦发银行"/> 
+	       <property name="bankcode" value="SPDB_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9314"/>  
+	       <property name="paramPath" value="${path.resource}/jsons/SPDB_B2B.json"/>
+	       <property name="prefixnum" value="30"/>       
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_9314" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="SPDB_B2B"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>
+	        </list>
+	    </property>	    
+	 </bean>
+	  <!--中国银联企业版 -->
+	 <bean id="UPAY_B2B" class="ebank.core.bank.b2b.UNIONPAY" init-method="config">
+	       <property name="bankname" value="中国银联"/> 
+	       <property name="bankcode" value="UPAY_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9702"/>  
+	       <property name="paramPath" value="${path.resource}/jsons/UNIONPAY_B2B.json"/>
+	       <property name="prefixnum" value="30"/>       
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="relativePath" value="${path.resource}"/>	
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="httprecurl" value="${root.httprecurl}"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_9702" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="UPAY_B2B"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 <!--深证发展银行企业版 -->
+	 <bean id="SDB_B2B" class="ebank.core.bank.b2b.SDB" init-method="config">
+	       <property name="bankname" value="平安银行"/> 
+	       <property name="bankcode" value="SDB_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9307"/>
+	       <property name="paramPath" value="${path.resource}/jsons/SDB_B2B.json"/>
+	       <property name="prefixnum" value="3"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="relativePath" value="${path.resource}"/>	
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="httprecurl" value="${root.httprecurl}"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_9307" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="SDB_B2B"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 <!--交通银行企业版 -->
+	 <bean id="COMM_B2B" class="ebank.core.bank.logic.VirtualBank" init-method="config">
+	       <property name="bankname" value="交通银行"/> 
+	       <property name="bankcode" value="BOCM_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9301"/>
+	       <property name="paramPath" value="${path.resource}/jsons/BOCM_B2B.json"/>
+	       <property name="prefixnum" value="22"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="httpClientSerivce" ref="httpClientSerivce"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="desturl" value="${jniproxy.url3}"/>
+	       <property name="keyPassword" value="comm_b2b_9301"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_9301" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="COMM_B2B"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	  <!--中信银行企业版 -->
+	  <!-- 
+	 <bean id="CITICV6_B2B" class="ebank.core.bank.b2b.CITICV6" init-method="config">
+	       <property name="bankname" value="中信银行"/> 
+	       <property name="bankcode" value="CITIC_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9313"/>
+	       <property name="paramPath" value="${path.resource}/jsons/CITICV6_B2B.json"/>
+	       <property name="prefixnum" value="35"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="httprecurl" value="${root.httprecurl}"/>
+	       <property name="orderService" ref="orderService"/>
+		   <property name="signercrt" value="${path.resource}/citic_b2b/ecclient.cer"/>
+		   <property name="signerkey" value="${path.resource}/citic_b2b/ecclient.key"/>
+           <property name="signerpwd" value="${path.resource}/citic_b2b/ecclient.pwd"/>
+           <property name="util">	       
+	           	<bean class="ebank.core.bank.logic.CiticV6_util">
+	              <constructor-arg value="${path.resource}/citic/lib/"/>
+	          	</bean>
+           </property>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_9313" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="CITICV6_B2B"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	  -->
+	 <!--徽商银行企业版 -->
+	 <bean id="HSBK_B2B" class="ebank.core.bank.b2b.HSBK" init-method="config">
+	       <property name="bankname" value="徽商银行"/> 
+	       <property name="bankcode" value="HSBK_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9333"/>
+	       <property name="relativePath" value="${path.resource}"/>	
+	       <property name="paramPath" value="${path.resource}/jsons/HSBK_B2B.json"/>
+	       <property name="prefixnum" value="73"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="httprecurl" value="${root.httprecurl}"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_9333" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="HSBK_B2B"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 <!--民生银行企业版 -->
+	 <bean id="CMBC_B2B" class="ebank.core.bank.b2b.CMBC" init-method="config">
+	       <property name="bankname" value="民生银行"/> 
+	       <property name="bankcode" value="CMBC_B2B"/>
+	       <property name="paytype" value="9"/>
+	       <property name="idx"     value="9305"/>
+	       <property name="relativePath" value="${path.resource}"/>	
+	       <property name="paramPath" value="${path.resource}/jsons/CMBC_B2B.json"/>
+	       <property name="prefixnum" value="23"/>
+	       <property name="sequenceservice" ref="sequenceService"/>
+	       <property name="recurl" value="${root.recurl}"/>
+	       <property name="httprecurl" value="${root.httprecurl}"/>
+	       <property name="enabled" value="true"/>
+	 </bean>
+	 <bean id="SID_9305" class="org.springframework.aop.framework.ProxyFactoryBean">
+	    <property name="target" ref="CMBC_B2B"/>
+	    <property name="interceptorNames">
+	        <list>
+	            <value>defaultAdvice</value>
+	            <value>slaPointcutAdvice</value>	            
+	        </list>
+	    </property>	    
+	 </bean>
+	 
+	 <bean id="httpClientSerivce" class="ebank.core.remote.HttpClientService"/>
+</beans>

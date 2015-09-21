@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="gw40"> 
+ <typeAlias alias="asynotify" type="ebank.core.model.domain.MapiAsyncNotify"/>
+
+ <resultMap id="asyncNotify" class="ebank.core.model.domain.MapiAsyncNotify">
+    <result property="id" column="ID" jdbcType="NUMBER"   />
+	<result property="date_created" column="DATE_CREATED" jdbcType="DATE"   />
+	<result property="last_updated" column="LAST_UPDATED" jdbcType="DATE"  />
+	<result property="customer_id" column="CUSTOMER_ID" jdbcType="NUMBER"   />
+	<result property="record_table" column="RECORD_TABLE" jdbcType="VARCHAR" nullValue=""   />
+	<result property="record_id" column="RECORD_ID" jdbcType="NUMBER" nullValue=""   />
+	<result property="notify_method" column="NOTIFY_METHOD" jdbcType="VARCHAR"   />
+	<result property="notify_address" column="NOTIFY_ADDRESS" jdbcType="VARCHAR"   />
+	<result property="sign_type" column="SIGN_TYPE" jdbcType="VARCHAR" nullValue=""   />
+	<result property="notify_contents" column="NOTIFY_CONTENTS" jdbcType="VARCHAR" nullValue=""   />
+	<result property="notify_time" column="NOTIFY_TIME" jdbcType="DATE" nullValue=""   />
+	<result property="notify_id" column="NOTIFY_ID" jdbcType="VARCHAR" nullValue=""   />
+	<result property="next_attempt_time" column="NEXT_ATTEMPT_TIME" jdbcType="DATE" nullValue=""   />
+	<result property="status" column="STATUS" jdbcType="VARCHAR"   />
+	<result property="attempts_count" column="ATTEMPTS_COUNT" jdbcType="NUMBER" nullValue=""   />
+	<result property="time_expired" column="TIME_EXPIRED" jdbcType="DATE" nullValue=""   />
+	<result property="is_verify" column="IS_VERIFY" jdbcType="NUMBER" nullValue=""   />
+	<result property="output_charset" column="OUTPUT_CHARSET" jdbcType="VARCHAR" />
+ </resultMap>
+
+ <insert id="gw40.insert_asynNotify" parameterClass="asynotify">
+    <selectKey resultClass="long" keyProperty="id">
+			SELECT
+			SEQ_MAPI_ASYNC_NOTIFY.nextval
+			AS ID
+			FROM DUAL  
+    </selectKey>        
+    insert into mapi_async_notify
+    (id, date_created, last_updated, customer_id, record_table, record_id, notify_method, notify_address, sign_type, notify_contents, notify_time, notify_id, next_attempt_time, status, attempts_count, time_expired, is_verify,output_charset)
+    select 
+    #id#, sysdate, sysdate, id, #record_table#, #record_id#, #notify_method#, #notify_address#, #sign_type#, #notify_contents#, case when #status#='success' then sysdate else null end, #notify_id#, sysdate+2/(24*60), #status#, #attempts_count#, sysdate+1, #is_verify#,#output_charset#
+    from CM_CUSTOMER where customer_no=to_char(#customer_id#)
+ </insert>
+ <update id="gw40.update_asynNotify" parameterClass="asynotify">
+    update mapi_async_notify set status=#status#,next_attempt_time=sysdate+3/(24*60),
+    notify_time=case when #status#='success' then sysdate 
+    else null end where notify_id=#notify_id# 
+ </update>
+ 
+</sqlMap>

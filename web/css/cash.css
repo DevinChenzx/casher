@@ -1,0 +1,147 @@
+@charset "utf-8";
+/* CSS Document */
+html, body { height: 100%; }
+.orders, .tab dt, .tab dt a.on,.moreblkye,.openico ,.queren,.quern_yes,.quern_no,.quern_warning{ background: url(../images/img/bg.png); }
+.top { width: 950px; height: 65px; border-bottom: solid 5px #0a386a }
+.logo { width: 172px; height: 64px; float: left; }
+.topmenu { width: auto; height: 25px; float: right; color: #0a386a;line-height:25px;}
+.paylist { width: 948px; height: 30px; margin-top: 25px; border: solid 1px #d9d9d9; border-bottom: none; background: #eff3ff; }
+.payname { width: 700px; height: 29px; line-height: 29px; color: #333; float: left; text-align: left; font-size: 14px; padding-left: 5px; }
+.paymaney { width: 200px; height: 29px; line-height: 29px; float: right; text-align: left; font-size: 14px }
+.paymore { width: 948px; height: 61px; border: solid 1px #d9d9d9; border-top: none; background: #f8f9fd; }
+.paymore dl { width: 948px; height: 60px; float: left; color: #666; }
+.paymore dl dt { width: 100px; height: 25px; float: left; line-height: 25px; text-align: right }
+.paymore dl dd { width: 800px; height: 25px; float: left; line-height: 25px; padding-left: 5px; text-align: left; }
+.orders {width: 50px; background-position: 30px 8px; }
+/*订单详情*/
+#dwn { position:relative; z-index:1; cursor:pointer }
+.xiangqingbox { width: 640px; height: auto; border: solid 1px #a1bee0; background: #fffced; padding: 5px; font-size: 12px; line-height: 15px; position: absolute; left: -5px; top: 20px; color: #4d4d4d; moz-box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.2); -webkit-box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.2); box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.2); }
+.xiangqingbox p { line-height: 15px; margin: 0px; padding: 0px; }
+.ico_jiantou { background: url(../img/ico_jt.gif) no-repeat; width: 7px; height: 13px; z-index: 9990; position: relative; left: -329px; top: 25px; }
+.guanbi { width: 30px; height: 15px; z-index: 9998; position: absolute; left: 615px; top: 3px; }
+.ord_bt { width: 150px; height: 50px; text-align: right; line-height:50px; float: left; color: #666; }
+.ord_bt p { padding-top: 10px; line-height: 25px; }
+.ord_cnt { float: left; width: 700px; height: auto; margin-top: 20px; }
+.ord_cnt p { padding-top: 10px; line-height: 25px; }
+.ord_cntbox { float: left; width: 700px; height: auto; margin-top: 40px; padding-left:160px; }
+
+/*银行选项卡*/
+.tab { text-align: left; width: 948px; height: auto; margin-top: 25px }
+.tab dt { background-position: 0px -23px; height: 44px; float: left; width: 948px }
+.tab dt strong { padding: 0 15px; color: #0a386a; }
+.tab dt a { display: inline-block; cursor: pointer; width: 102px; font-size: 14px; font-weight: bold; height: 44px; line-height: 44px; text-align: center; color: #00a0e9; }
+.tab dt a.on { background-position: 0px -79px; color: #333; font-weight: bold; }
+.tab dd { height:auto !important;height:200px;min-height:300px; ; padding-bottom:20px; clear: both; border: #bfd6e8 1px solid; border-top: none; }
+/*底部样式*/
+.footbox { width: 950px; height: 135px; margin-top: 40px; border-top: solid 1px #d9d9d9; color: #666; }
+.footbox p { line-height: 25px; }
+.mydiv { background-color: #fff;color:#000;border: 1px solid #666; text-align: center; line-height: 40px; font-size: 12px; font-weight: bold; z-index: 199; width: 720px; height: 520px; left: 35%;/*FF IE7*/ top: 25%;/*FF IE7*/ margin-left: -150px!important;/*FF IE7 该值为本身宽的一半 */ margin-top: -60px!important;/*FF IE7 该值为本身高的一半*/ margin-top: 0px; position: fixed!important;/*FF IE7*/ position: absolute;/*IE6*/  _top:       expression(eval(document.compatMode &&  document.compatMode=='CSS1Compat') ?  documentElement.scrollTop + (document.documentElement.clientHeight-this.offsetHeight)/2 :/*IE6*/
+ document.body.scrollTop + (document.body.clientHeight - this.clientHeight)/2);/*IE5 IE5.5*/
+}
+.bg { background-color: #666; width: 100%; height: 100%; left: 0; top: 0;/*FF IE7*/ filter: alpha(opacity=50);/*IE*/ opacity: 0.5;/*FF*/ z-index: 1; position: fixed!important;/*FF IE7*/ position: absolute;/*IE6*/  _top:       expression(eval(document.compatMode &&  document.compatMode=='CSS1Compat') ?  documentElement.scrollTop + (document.documentElement.clientHeight-this.offsetHeight)/2 :/*IE6*/
+ document.body.scrollTop + (document.body.clientHeight - this.clientHeight)/2);/*IE5 IE5.5*/
+}
+
+
+/*余额支付*/
+.tabye { width:950px; height:auto; margin-top:35px; }
+.tabye dl dt { height:33px; width:550px; margin-right:40px !important; margin-right:20px; float:right; margin-bottom:-1px; background-position: 0 -93px; }
+.tabye dl dt a { float:left; display:block; cursor:pointer; width:110px; height:33px; line-height:27px; text-align:center; color:#000; text-decoration:none; }
+.tabye dl dt a.tabActive { background-position:0 -133px; color:#fff; font-weight:bold; position:relative; }
+.tabye dl dt a.hov { ext-align:center; color:#000; text-decoration:none; }
+.tabye dl dd { height:auto; margin-left:40px !important; margin-left:0px; clear:both; }
+.tabye dl dd ul { width:868px; background:#fff; height:auto; padding-bottom:20px; padding-top:20px; margin-top:10px; border:solid 1px #d8d8d8; height:100%; overflow:hidden; *margin-left:-40px;
+_margin-left:0px; }
+.guideye { float: left; width:780px; margin-left:10px; height:auto; color:#666; }
+.guideye p { margin:0px; padding:0px; line-height:25px; }
+.lsbj { background:#f7fdf1; border-bottom: dashed 1px #d8d8d8; border-top: dashed 1px #d8d8d8; }
+.ord_btye { width:840px; height:40px; text-align:left; float: left; color:#666; margin-bottom:10px; margin-top:20px; margin-left:10px; }
+.ord_btye p { padding-top:10px; line-height:25px; }
+.moreblkye { width:100px; height:30px; position:absolute; top:15px; right:350px; background-position:-60px 3px; }
+#fullbg { background-color:Gray; left:0px; opacity:0.5; position:absolute; top:0px; z-index:3; filter:alpha(opacity=50); /* IE6 */ -moz-opacity:0.5; /* Mozilla */ -khtml-opacity:0.5; /* Safari */ }
+#dialog { background-color:#FFF; border:1px solid #888; display:none; height:auto; left:25%; margin:-100px 0 0 -100px; padding:12px; position:fixed !important; /* 浮动对话框 */ position:absolute; top:20%; width:700px; z-index:5; }
+#dialog p { margin:0 0 12px; }
+#dialog p.close { text-align:right; }
+
+/*银行列表样式*/
+.SelectBanktop { padding:0; list-style-type:none; width:690px; position:relative; height:60px; }
+.SelectBanktop li { float:left; width:170px; }
+.SelectBanktop li label { float:left; margin-left:0px; margin-right:5px; padding-top:4px; margin-left:5px; width:auto; }
+.SelectBanktop li input { float:left; margin-top:20px; }
+.SelectBanktop li img, ol.SelectBank li img { border:1px solid #ccc; padding:3px; vertical-align:-5px; }
+.SelectBanktop li a img.SelectedOn { border:1px solid #FFB357; background:#F1F1F1; }
+.SelectBanktop li a img.SelectedOff { border:1px solid #FFFFFF; background:#FFFFFF; }
+.SelectBanktop li a:hover img { border:1px solid #FFB357; padding:3px; }
+.SelectBanktop li a:active img { border:1px solid #FFB357; padding:3px; background:#F1F1F1; }
+.SelectBanktop div.morcd { position: absolute; width:100px; height:10px; z-index:9998; left:580px; top:5px; margin:0px; padding:0px; }
+.SelectBank { padding-left:20px; list-style-type:none; width:690px; position:relative; }
+.SelectBank li { float:left; width:170px;}
+.SelectBank li label { float:left; margin-left:0px; margin-right:5px; padding-top:4px; margin-left:5px; width:auto; }
+.SelectBank li input { float:left; margin-top:20px; }
+.SelectBank li img, ol.SelectBank li a:link img { border:1px solid #ccc; padding:3px; vertical-align:-5px; }
+.SelectBank li img.SelectedOn { border:1px solid #FFB357; background:#F1F1F1; }
+.SelectBank li img.SelectedOff { border:1px solid #FFFFFF; background:#FFFFFF; }
+.SelectBank li a:hover img { border:1px solid #FFB357; padding:3px; }
+.SelectBank li a:active img { border:1px solid #FFB357; padding:3px; background:#F1F1F1; }
+.SelectBank li.Selected { width:690px; margin-bottom:5px; position:absolute; top:-15px; left:0px; }
+.olMobieSign { list-style-type:none; color:#666; line-height:18px; margin-top:5px; }
+
+.morebank{ margin:0 auto;width:96%; height:30px; border-bottom:solid 1px #bfd6e8; line-height:30px; margin-bottom:10px; margin-top:10px;}
+/*支付按钮*/
+.zf_button { background:url(../images/img/button.gif) no-repeat; width:125px; height:38px; line-height:38px; color:#fff; font-family:"微软雅黑"; font-weight:bold; border:none; cursor:pointer; }
+.pdleft40 { padding-left:40px; }
+
+/*查看限额*/
+.quota { width:100px; height:30px; position:absolute; top:20px; right:500px;  }
+.sxbankbox { width:645px; border:solid 1px #9cafbe; margin-top:20px; line-height:25px; float:left; left:130px; top:30px;position:absolute; background:#fff;}
+.sxbankbox h1 { padding-left:10px; padding-top:0px; background:#effeb9; line-height:20px;}
+.quotatabl { border-collapse:collapse; margin-top:5px; }
+.quotatabl tr th { height:25px; text-align: center; background:#f6f6f6; font-weight:bold; color:#656565; border-collapse:collapse; border-bottom:solid 1px #d1d1d1; line-height:25px; }
+.quotatabl tr td { border-bottom:solid 1px #dadada; text-align:center; color:#333; line-height:30px;}
+.quotatabl tr td p { color:#900; background:#effeb9 }
+.quotatablbox { border-bottom:solid 0px #d1d1d1; }
+.LITEPAY {overflow-y:auto;width:665px;height:200px;}
+
+/*支付向导*/
+.guide { float: left; width:810px; height:auto; color:#666; }
+.guide p { margin:0px; padding:0px; line-height:25px; }
+.btn_gid { width:100px; }
+/*表格样式*/
+.hs { width:100%; border-collapse:collapse; }
+.hs tr th { height:35px; color:#666; }
+.hs tr td { height:35px; color:#666; text-align:left; }
+.tdOdd { background:#f3f3f3; }
+.tdOver { background:#F5FAF7; }
+.logtab { width:100%; border-collapse:collapse; }
+.logtab tr th { height:35px; color:#666; }
+.logtab tr td { height:35px; color:#666; text-align:left; }
+.logtab tr td P { height:35px; color:#666; text-align:right; line-height:35px; }
+
+/*银行跳转*/
+.blank_tz { float: left; width:780px; margin-left:10px;height:50px; color:#666; }
+.blank_tz p { margin:0px; padding-top:10px; line-height:25px; }
+.blank_tz img{border:solid 1px #ccc; margin-top:10px;}
+.font14{font-size:14px;}
+
+/*跳到网银*/
+.openico{ margin:0 auto; width:700px; height:70px; border-bottom:solid 1px #ccc; background-position:-120px -62px;}
+.openico p{padding-left:70px; line-height:90px; color:#0a386a; text-align:left;}
+.opencnt{margin:0 auto; width:700px; height:auto; padding-top:29px;}
+.opencnt h1{padding-left:50px; padding-top:25px; line-height:25px; text-align:left; font-weight:bold}
+.opencnt h2{ padding-left:50px;font-weight:normal;line-height:25px; text-align:left;}
+
+.qunrenzit{font-family:"微软雅黑"; font-size:14px;}
+.queren{ width:689px; height:289px; background-position: 0px -133px; margin-top:10%}
+.queren_nobox{ width:689px; height:289px; background-position: 0px -133px; margin-top:1%}
+.quern_yes{ width:575px; height:50px; float:left; background-position:0px -426px; margin:10px 0 0 50px;}
+.quern_yes p{padding-left:60px; line-height:40px; text-align:left;color:#565656;}
+.quern_no{ width:575px; height:50px; float:left; background-position:0px -476px; margin:10px 0 0 50px;}
+.quern_no p{padding-left:60px; line-height:50px; text-align:left;color:#565656;}
+.quern_warning{ width:575px; height:50px; float:left; background-position:0px -530px; margin:10px 0 0 50px;} 
+.quern_warning p{padding-left:60px; line-height:50px; text-align:left;color:#565656;}
+.quern_link{width:680px; height:30px; float:left; line-height:30px; text-align:right; margin-top:190px;}
+.quern_link2{width:680px; height:30px; float:left; line-height:30px; text-align:right; margin-top:120px;}
+
+
+
+.mydiv { background-color: #fff;color:#000; border: 7px solid #484A4A; text-align: center; line-height: 40px; font-size: 14px; font-weight: bold; z-index: 199; width: 720px; height: 500px; left: 35%;/*FF IE7*/ top: 25%;/*FF IE7*/ margin-left: -150px!important;/*FF IE7 该值为本身宽的一半 */ margin-top: -60px!important;/*FF IE7 该值为本身高的一半*/ margin-top: 0px; position: fixed!important;/*FF IE7*/ position: absolute;/*IE6*/ _top: expression(eval(document.compatMode && document.compatMode=='CSS1Compat') ? documentElement.scrollTop + (document.documentElement.clientHeight-this.offsetHeight)/2 :/*IE6*/ document.body.scrollTop + (document.body.clientHeight - this.clientHeight)/2);/*IE5 IE5.5*/ } .bg { background-color: #313131; width: 100%; height: 100%; left: 0; top: 0;/*FF IE7*/ filter: alpha(opacity=50);/*IE*/ opacity: 0.5;/*FF*/ z-index: 1; position: fixed!important;/*FF IE7*/ position: absolute;/*IE6*/ _top: expression(eval(document.compatMode && document.compatMode=='CSS1Compat') ? documentElement.scrollTop + (document.documentElement.clientHeight-this.offsetHeight)/2 :/*IE6*/ document.body.scrollTop + (document.body.clientHeight - this.clientHeight)/2);/*IE5 IE5.5*/ } .morebank{ margin:0 auto;width:96%; height: 40px; border-bottom:solid 1px #CCCCCC; line-height:40px; margin-bottom:10px; margin-top:10px;} .morebank a.right{border:1px solid red;padding:10px;margin-top:5px;background:url(../images/sprite_payFor.gif) 0px -71px no-repeat;} 

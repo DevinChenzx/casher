@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="gbk"?>
+<!-- ====================================================================== 
+		payment程序                                                               
+     ====================================================================== -->
+<project name="payment" default="all" basedir=".">
+	<property name="dist" value="./deploy" />
+	<property name="svndir" value="." />
+	<property file="project.properties" />
+	<property file="filters/filterParam-${buildmode}.properties" />
+	<!--typedef resource="org/tigris/subversion/svnant/svnantlib.xml" / -->
+	<path id="lib_path">
+		<fileset dir="${svndir}/lib">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<path id="lib_resin">
+		<fileset dir="${resin_home}/lib">
+			<include name="*.jar" />
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: 过滤器，统一更新各属性文件中的变量             
+         - - - - - - - - - - - - - - - - - -->
+	<filterset id="project.filterset">			
+		<filter token="abc.keypassword" value="${abc.keypassword}" />
+		<filter token="abc.merchantid" value="${abc.merchantid}" />
+		<filter token="abc.service" value="${abc.service}" />
+		<filter token="agent.url" value="${agent.url}" />		
+		<filter token="bocomm.url" value="${bocomm.url}" />
+		<filter token="cbp.url" value="${cbp.url}" />		
+		<filter token="cmb.pwd" value="${cmb.pwd}" />		
+		<filter token="cmbc.merchantid" value="${cmbc.merchantid}" />
+		<filter token="comm.merchantid" value="${comm.merchantid}" />
+		<filter token="gdb.merchantid" value="${gdb.merchantid}" />
+		<filter token="hxb.merchantid" value="${hxb.merchantid}" />
+		<filter token="hxb.terminal" value="${hxb.terminal}" />
+		<filter token="icbc.merchantAccount" value="${icbc.merchantAccount}" />
+		<filter token="icbc.merchantid" value="${icbc.merchantid}" />
+		<filter token="icbc.service" value="${icbc.service}" />
+		<filter token="isms.posttrx_url" value="${isms.posttrx_url}" />
+		<filter token="jdbc.password" value="${jdbc.password}" />		
+		<filter token="jdbc.url" value="${jdbc.url}" />
+		<filter token="jdbc.username" value="${jdbc.username}" />	
+		<filter token="jms.brokerurl" value="${jms.brokerurl}" />
+		<filter token="jniproxy.url" value="${jniproxy.url}" />
+		<filter token="jniproxy.url2" value="${jniproxy.url2}" />
+		<filter token="log4j.lever" value="${log4j.lever}" />
+		<filter token="log4j.path" value="${log4j.path}" />		
+		<filter token="path.resource" value="${path.resource}" />
+		<filter token="root.dn" value="${root.dn}" />
+		<filter token="root.ip" value="${root.ip}" />
+		<filter token="root.recurl" value="${root.recurl}" />
+		<filter token="root.httprecurl" value="${root.httprecurl}" />
+		<filter token="production.mode" value="${production.mode}" />
+		<filter token="sdb.merchantid" value="${sdb.merchantid}" />
+		<filter token="sms.endpoints" value="${sms.endpoints}" />
+		<filter token="spdb.keypassword" value="${spdb.keypassword}" />
+		<filter token="spdb.storepassword" value="${spdb.storepassword}" />
+		<filter token="root.filepath" value="${root.filepath}"/>
+		<filter token="ceb.keypassword" value="${ceb.keypassword}"/>
+		<filter token="ceb.storepassword" value="${ceb.storepassword}"/>
+	</filterset>	
+	<!-- ================================= 
+          target: 所有操作             
+         ================================= -->
+	<target name="all" depends="compile,init_deploy,copy_lib, copy_properties,build_zip"> <!--compile,init_deploy,copy_lib, -->
+	</target>
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: 检出程序                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="checkout">
+		<svn username="${svn_user}" password="${svn_password}">
+			<checkout url="${svn_url}" destpath="${svndir}" revision="${svn_project_version}" />
+		</svn>
+	</target>
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: 编译                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="compile">
+		<mkdir dir="${dist}/classes" />
+		<echo>do compile the code...</echo>  
+		<javac debug="true" srcdir="${svndir}/src.common;${svndir}/src.core;${svndir}/src.web" destdir="${dist}/classes" source="1.6"  includeantruntime="false">
+					<classpath refid="lib_path" />
+					<classpath refid="lib_resin" />
+		</javac>
+		
+		
+		<copy todir="${dist}/classes">
+			<fileset dir="${svndir}/src.core">
+				<include name="**/sqlmaps/*.xml" />				
+			</fileset>			
+		</copy>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: 创建发布工程的目录结构                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="init_deploy">
+		<mkdir dir="${dist}/web/" />
+		<mkdir dir="${dist}/keys.${buildmode}" />
+		<copy todir="${dist}/web">
+			<fileset dir="${svndir}/web"				
+				excludes="**/.svn/*.*,**/work/**,**/tmp/**,**/bak/**/,**/classes/**,**/attachments/**"/>	
+			
+		</copy>
+		<copy todir="${dist}/keys.${buildmode}">
+			<fileset dir="${svndir}/keys.${buildmode}" excludes="**/.svn/**"/>
+		</copy>
+	</target>
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: 将lib包移到web-inf/lib下                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="copy_lib">
+		<jar destfile="${dist}/payment_${svn_project_version}.jar" basedir="${dist}/classes" />
+		<copy todir="${dist}/web/WEB-INF/lib">
+			<fileset dir="${svndir}/lib">
+				<include name="*.jar" />
+				<include name="common/*.jar" />				
+				<include name="aspectj/*.jar" />
+				<include name="axis/*.jar" />
+				<include name="depends/*.jar" />
+				<include name="ibatis/*.jar" />
+				<include name="apache/*.jar" />
+				<include name="json/*.jar" />
+				<include name="spring/*.jar"/>
+				<include name="activemq/*.jar"/>
+			</fileset>
+			<fileset dir="${dist}">
+				<include name="*.jar" />
+			</fileset>
+			<mapper type="flatten"/>
+		</copy>		
+	</target>
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: 将源src下的properties，xml配置放在classpath下                      
+         					- - - - - - - - - - - - - - - - - -->
+	<target name="copy_properties">		
+		<copy todir="${dist}/web/WEB-INF/classes" overwrite="true">
+			<fileset dir="${svndir}/src.core">
+				<include name="*.xml" />
+				<include name="*.properties" />
+				<include name="*.ini" />
+				<include name="conf/*.*" />				
+				<include name="template/*.*" />
+			</fileset>
+			<fileset dir="${svndir}/src.web">
+							<include name="*.xml" />
+							<include name="*.properties" />
+							<include name="*.ini" />
+							<include name="*.*" />
+				            <include name="i18n/*"/>				
+						</fileset>
+		</copy>
+		<copy todir="${dist}/web/WEB-INF/classes" overwrite="true">
+			<fileset dir="${svndir}/filters/filter" includes="params/*.*,**/*,*.properties,*.xml,*.ini" />
+			<filterset refid="project.filterset" />
+		</copy>
+				
+	</target>
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: 将dest下面的目前打成zip包                      
+         					- - - - - - - - - - - - - - - - - -->
+	<target name="build_zip">		
+		<jar destfile="${dist}/payment${svn_project_version}.zip" basedir="${dist}/web" />
+	</target>
+
+</project>

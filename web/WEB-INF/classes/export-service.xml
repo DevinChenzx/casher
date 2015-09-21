@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+			    "http://www.springframework.org/dtd/spring-beans.dtd">			    
+<beans>
+    <bean id="publishServiceAware" class="ebank.core.logic.PublishServiceAware_Impl">
+       <property name="publishService" ref="publishService"/>
+       <property name="orderService" ref="orderService"/>
+       <property name="payResultService" ref="payResultService"/>
+       <property name="jmsAwareService" ref="jmsInvokeServiceAware"/>       
+    </bean>
+    <bean id="faultTrxServiceAware" class="ebank.core.logic.FaultTrxServiceAware_Impl"  parent="baseDAO">
+       <property name="engineService" ref="engineService"/>         
+    </bean>    
+    <bean id="jmsInvokeServiceAware" class="ebank.core.logic.JMSBillService_Aware_Impl">
+       <property name="orderService" ref="orderService"/>
+       <property name="esbService" ref="esbService"/>            
+    </bean>
+    <bean id="httpInvokeFaultTrxService" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+        <property name="service" ref="faultTrxServiceAware" />
+        <property name="serviceInterface" value="ebank.core.HttpInvokeService"/>
+    </bean>
+    <bean id="httpInvokePublishService" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+        <property name="service" ref="publishServiceAware" />
+        <property name="serviceInterface" value="ebank.core.HttpInvokeService"/>
+    </bean> 
+    <bean id="httpInvokeDirectPayService" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+        <property name="service" ref="directPayService" />
+        <property name="serviceInterface" value="ebank.core.DirectPayService"/>
+    </bean> 
+    <bean id="httpInvokeJmsService" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+        <property name="service" ref="jmsInvokeServiceAware" />
+        <property name="serviceInterface" value="javax.jms.MessageListener"/>
+    </bean> 
+    <bean id="abcService" class="ebank.core.logic.ABCService" ></bean>
+    <bean id="httpABCService" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+        <property name="service" ref="abcService" />
+        <property name="serviceInterface" value="ebank.core.HttpInvokeService"/>
+    </bean>
+   
+</beans>

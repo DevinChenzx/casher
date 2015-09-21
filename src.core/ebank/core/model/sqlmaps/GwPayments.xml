@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="gw50">
+ <typeAlias alias="gwpayment" type="ebank.core.model.domain.GwPayments"/> 
+ <insert id="gw50.payment_insert" parameterClass="gwpayment">
+  <selectKey resultClass="String" keyProperty="id" >  
+      SELECT '90'||TO_CHAR(sysdate,'yymmdd')||LPAD(SEQ_PAYMENTS.nextval,7,'0') AS ID FROM DUAL  
+  </selectKey>
+  insert into gwpayments
+  (id,prid, paytype, paynum, payamount, amount,infromacct, intoacct, refnum, paysts, paytime, channel, modes, recepit, createdate, payinfo,billsts)
+   values
+  (#id#,#prid#,#paytype#, #paynum#, #payamount#, #amount#,#infromacct#, #intoacct#, #refnum#, #paysts#, sysdate, #channel#, #modes#, #recepit#, sysdate, #payinfo#,#billsts#)
+                          
+ </insert>
+ <update id="gw50.update_payment" parameterClass="gwpayment">
+    update gwpayments set refnum=#refnum#,paysts=#paysts#,paytime=sysdate,payinfo=#payinfo#
+    where id=#id#
+ </update>
+ <select id="gw50.findPaymentById" resultClass="gwpayment">
+   select * from gwpayments where id=#value#
+ </select>
+ <select id="gw50.findByNumAndType" resultClass="gwpayment" parameterClass="map">
+   select * from gwpayments where paynum=#paynum# and paytype=#paytype#
+ </select>
+ <update id="gw51.updatetradebase" parameterClass="map">
+   update trade_base set status=#status# where trade_no
+   in(
+ 		select nvl(s.id,w.id) from gwpayments p inner join gworders w on p.paynum=w.id
+ 		left join gwsuborders s on w.id=s.gwordersid where p.paynum=#trade_no#
+   )
+ </update>
+ <update id="gw51.updatebillsts" parameterClass="gwpayment">
+   update gwpayments set billsts=#billsts# where id=#id#
+ </update>
+ <select id="gw51.querypaymentsbysts" resultClass="gwpayment" parameterClass="string">  
+  <![CDATA[ 
+   select t.* from gwpayments t where billsts=#value# and paysts=1 and paytype=0 and trunc(createdate)>trunc(sysdate-3) and rownum<100 
+  ]]> 
+ </select>
+</sqlMap>

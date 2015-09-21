@@ -1,0 +1,38 @@
+select '<result property="'||lower(column_name)||'" column="'||COLUMN_NAME||'" type="'||data_type||'"'||
+case nullable when 'N' THEN ' not-null="'||decode(nullable,'N','true','false')||'"'
+ELSE ' nullValue="" '
+END
+||' length="'||data_length||'" />'  
+ from all_tab_columns  where table_name='GWTRXS'
+ 
+ 数据库用户：
+ test_ismp test_ismp
+ 
+ 203.81.23.23 10022  dev appserver&dev
+ 
+ 
+ pay: 18182 
+ 服务器ssh用户名dev,密码appserver&dev,ssh端口号10022
+
+各子系统对外的URL:
+ismp——        http://b.reapal.com/
+boss——        http://boss.reapal.com/
+cashier——     http://epay.reapal.com/
+mapi——        http://interface.reapal.com/
+account——     http://www.wonderpay.net:8112/
+
+
+测试数据：
+客户1——测试客户001
+      登录账户：admin@testpay.org,登录密码123!@#qwe，角色是管理员
+      登录账户：finance001@testpay.org,登录密码123!@#qwe，角色是财务
+      登录账户：sale001@testpay.org，登录密码123!@#qwe，角色是普通用户
+      登录账户：sale002@testpay.org，登录密码123!@#qwe，角色是普通用户
+ 
+ http://epay.reapal.com/Charger?service=create_charge&amount=0.12&buyer_id=1122&buyer_name=xiexh@chinabank.com.cn&preference=CMB
+ 
+ http://epay.reapal.com/PayRec?idx=308&trxnum=5000004270&bankcode=CMB&amount=10&sts=1&mode=test
+ http://localhost/Charger?service=create_charge&amount=11&buyer_id=1122&buyer_name=xiexh@chinabank.com.cn&preference=CMB
+ 
+ [22:11:13] fengwh: http://club.alipay.com/read-htm-tid-8681367.html
+[22:16:27] fengwh: http://club.alipay.com/read.php?tid=9976972
